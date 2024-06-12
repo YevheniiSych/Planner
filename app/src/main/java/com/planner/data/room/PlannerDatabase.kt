@@ -12,4 +12,8 @@ import com.planner.data.room.category.CategoryDao
 abstract class PlannerDatabase: RoomDatabase() {
 
     abstract val categoryDao: CategoryDao
+
+    companion object {
+        const val DATABASE_NAME = "planner_db"
+    }
 }
