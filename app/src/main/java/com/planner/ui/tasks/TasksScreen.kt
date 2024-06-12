@@ -20,45 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.planner.data.TaskCategory
+import com.planner.data.room.category.Category
 import com.planner.ui.theme.SelectedCategoryItemColor
 import com.planner.ui.theme.UnselectedCategoryItemColor
 
 @Preview
 @Composable
 fun TasksScreen() {
-    val testTaskCategories = listOf(
-        TaskCategory(
-            id = 0,
-            title = "All"
-        ),
-        TaskCategory(
-            id = 1,
-            title = "Work"
-        ),
-        TaskCategory(
-            id = 2,
-            title = "Personal"
-        ),
-        TaskCategory(
-            id = 3,
-            title = "All"
-        ),
-        TaskCategory(
-            id = 4,
-            title = "Work"
-        ),
-        TaskCategory(
-            id = 5,
-            title = "Personal"
-        )
-    )
-    CategoriesList(taskCategories = testTaskCategories)
+//    CategoriesList(taskCategories = testTaskCategories)
 
 }
 
 @Composable
-fun CategoriesList(taskCategories: List<TaskCategory>) {
+fun CategoriesList(taskCategories: List<Category>) {
     var selectedCategoryIndex by remember {
         mutableIntStateOf(0)
     }
