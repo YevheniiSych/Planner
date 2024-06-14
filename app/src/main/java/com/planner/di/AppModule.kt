@@ -22,11 +22,9 @@ object AppModule {
     @Provides
     @Singleton
     fun providePlannerDatabase(app: Application): PlannerDatabase {
-        return  Room.databaseBuilder(
-            app,
-            PlannerDatabase::class.java,
-            PlannerDatabase.DATABASE_NAME
-        ).build()
+        return  Room.databaseBuilder(app, PlannerDatabase::class.java, PlannerDatabase.DATABASE_NAME)
+            .createFromAsset("database/planner.db")
+            .build()
     }
 
     @Provides
