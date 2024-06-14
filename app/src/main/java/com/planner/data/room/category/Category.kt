@@ -10,3 +10,5 @@ data class Category(
     val title: String,
     val dateCreatedTimestamp: Long
 )
+
+class InvalidCategoryException(message: String): Exception(message)

@@ -20,14 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.planner.data.room.category.Category
 import com.planner.ui.theme.SelectedCategoryItemColor
 import com.planner.ui.theme.UnselectedCategoryItemColor
 
 @Preview
 @Composable
-fun TasksScreen() {
-//    CategoriesList(taskCategories = testTaskCategories)
+fun TasksScreen(
+    viewModel: TasksViewModel = hiltViewModel()
+) {
+
 
 }
 

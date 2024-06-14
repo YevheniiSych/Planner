@@ -15,6 +15,6 @@ interface CategoryDao {
     @Delete
     suspend fun deleteCategory(category: Category)
 
-    @Query("SELECT * FROM category ORDER BY dateCreatedTimestamp ASC")
-    fun getCategoriesByDateCreated(): Flow<List<Category>>
+    @Query("SELECT * FROM category")
+    fun getCategories(): Flow<List<Category>>
 }

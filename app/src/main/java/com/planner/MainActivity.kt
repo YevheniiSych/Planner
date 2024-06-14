@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.planner.ui.nav.Nav
+import com.planner.ui.nav.InitNavigation
 import com.planner.ui.theme.PlannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .padding(top = 40.dp)
                 ) {
-                    Nav()
+                    InitNavigation()
                 }
             }
         }

@@ -10,7 +10,7 @@ interface CategoryRepository {
 
     suspend fun deleteCategory(category: Category)
 
-    fun getCategoriesByDateCreated(): Flow<List<Category>>
+    fun getCategories(): Flow<List<Category>>
 }
 
 class CategoryRepositoryImpl(
@@ -25,8 +25,8 @@ class CategoryRepositoryImpl(
         categoryDao.deleteCategory(category)
     }
 
-    override fun getCategoriesByDateCreated(): Flow<List<Category>> {
-        return categoryDao.getCategoriesByDateCreated()
+    override fun getCategories(): Flow<List<Category>> {
+        return categoryDao.getCategories()
     }
 
 
