@@ -27,6 +27,10 @@ class HomeViewModel @Inject constructor(
         getCategories(CategoryOrder.DateCreated(OrderType.DESC))
     }
 
+    fun onEvent(event: HomeEvent) {
+
+    }
+
     private fun getCategories(categoryOrder: CategoryOrder) {
         getCategoriesJob?.cancel()
         getCategoriesJob = categoryUseCases.getCategories(categoryOrder)

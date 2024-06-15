@@ -30,19 +30,19 @@ import com.planner.data.room.category.Category
 import com.planner.ui.theme.SelectedCategoryItemColor
 import com.planner.ui.theme.UnselectedCategoryItemColor
 
-@Preview
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    state: HomeState,
+    onEvent: (HomeEvent) -> Unit
 ) {
 
     CategoriesList(
-        taskCategories = viewModel.state.value.categories,
+        taskCategories = state.categories,
         onItemClick = {
 
         },
         onEvent = {
-
+            onEvent(it)
         }
     )
 }
