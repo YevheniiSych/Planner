@@ -9,6 +9,15 @@ data class Category(
     val id: Int = 0,
     val title: String,
     val dateCreatedTimestamp: Long
-)
+) {
+    companion object {
+        const val CATEGORY_ALL_ID = -1
+        val categoryAll = Category(
+            id = CATEGORY_ALL_ID,
+            title = "All",
+            dateCreatedTimestamp = -1
+        )
+    }
+}
 
 class InvalidCategoryException(message: String): Exception(message)

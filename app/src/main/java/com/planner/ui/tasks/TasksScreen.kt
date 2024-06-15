@@ -30,8 +30,7 @@ import com.planner.ui.theme.UnselectedCategoryItemColor
 fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel()
 ) {
-
-
+    CategoriesList(taskCategories = viewModel.state.value.categories)
 }
 
 @Composable
