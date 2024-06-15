@@ -1,10 +1,10 @@
-package com.planner.ui.tasks
+package com.planner.ui.home
 
 import com.planner.data.room.category.Category
 import com.planner.data.util.OrderType
 import com.planner.data.util.category.CategoryOrder
 
-data class TasksState(
+data class HomeState(
     private val _categories: List<Category> = emptyList(),
     val categoryOrder: CategoryOrder = CategoryOrder.DateCreated(OrderType.DESC)
 ) {

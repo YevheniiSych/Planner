@@ -1,4 +1,4 @@
-package com.planner.ui.tasks
+package com.planner.ui.home
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -14,12 +14,12 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class TasksViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val categoryUseCases: CategoryUseCases
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(TasksState())
-    val state: State<TasksState> = _state
+    private val _state = mutableStateOf(HomeState())
+    val state: State<HomeState> = _state
 
     private var getCategoriesJob: Job? = null
 

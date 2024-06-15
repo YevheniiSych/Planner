@@ -1,4 +1,4 @@
-package com.planner.ui.tasks
+package com.planner.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -32,8 +32,8 @@ import com.planner.ui.theme.UnselectedCategoryItemColor
 
 @Preview
 @Composable
-fun TasksScreen(
-    viewModel: TasksViewModel = hiltViewModel()
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     CategoriesList(
@@ -51,7 +51,7 @@ fun TasksScreen(
 fun CategoriesList(
     taskCategories: List<Category>,
     onItemClick: (Category) -> Unit,
-    onEvent: (TaskEvent) -> Unit
+    onEvent: (HomeEvent) -> Unit
 ) {
     var selectedCategoryIndex by remember {
         mutableIntStateOf(0)
@@ -87,7 +87,7 @@ fun CategoryItem(
     category: Category,
     isSelected: Boolean,
     onItemClick: (Category) -> Unit,
-    onEvent: (TaskEvent) -> Unit
+    onEvent: (HomeEvent) -> Unit
 ) {
 
     var isCategoryMenuVisible by rememberSaveable {
@@ -133,12 +133,12 @@ fun CategoryMenu(
     expanded: Boolean,
     category: Category,
     onDismissRequest: () -> Unit,
-    onEvent: (TaskEvent) -> Unit
+    onEvent: (HomeEvent) -> Unit
 ) {
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
         DropdownMenuItem(
             text = { Text(text = "Pin") },
-            onClick = { onEvent(TaskEvent.PinCategory(category)) }
+            onClick = { onEvent(HomeEvent.PinCategory(category)) }
         )
         DropdownMenuItem(
             text = { Text(text = "Add new") },
@@ -146,7 +146,7 @@ fun CategoryMenu(
         )
         DropdownMenuItem(
             text = { Text(text = "Delete") },
-            onClick = { onEvent(TaskEvent.DeleteCategory(category)) }
+            onClick = { onEvent(HomeEvent.DeleteCategory(category)) }
         )
     }
 }
