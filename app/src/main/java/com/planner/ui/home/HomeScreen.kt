@@ -23,10 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.planner.data.room.category.Category
+import com.planner.ui.components.AddCategoryDialog
 import com.planner.ui.theme.SelectedCategoryItemColor
 import com.planner.ui.theme.UnselectedCategoryItemColor
 
@@ -135,18 +134,39 @@ fun CategoryMenu(
     onDismissRequest: () -> Unit,
     onEvent: (HomeEvent) -> Unit
 ) {
+    var isAddCategoryDialogVisible by remember {
+        mutableStateOf(false)
+    }
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
         DropdownMenuItem(
             text = { Text(text = "Pin") },
-            onClick = { onEvent(HomeEvent.PinCategory(category)) }
+            onClick = {
+                onEvent(HomeEvent.PinCategory(category))
+            }
         )
         DropdownMenuItem(
             text = { Text(text = "Add new") },
-            onClick = { /* Handle add new */ }
+            onClick = {
+                isAddCategoryDialogVisible = true
+            }
         )
         DropdownMenuItem(
             text = { Text(text = "Delete") },
-            onClick = { onEvent(HomeEvent.DeleteCategory(category)) }
+            onClick = {
+                onEvent(HomeEvent.DeleteCategory(category))
+            }
         )
     }
+
+    if (isAddCategoryDialogVisible) {
+        AddCategoryDialog(
+            onDismiss = {
+                isAddCategoryDialogVisible = false
+            },
+            onSaveButtonClick = {
+                isAddCategoryDialogVisible = false
+            }
+        )
+    }
+
 }
