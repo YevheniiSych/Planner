@@ -36,11 +36,11 @@ fun HomeScreen(
                 onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
             }
 
-            override fun onPinItemClick(category: Category) {
+            override fun onPinItemClick() {
 //                onEvent(HomeEvent.CategoryEvent.Pin)
             }
 
-            override fun onDeleteItemClick(category: Category) {
+            override fun onDeleteItemClick() {
                 isDeleteCategoryDialogVisible = true
             }
 
