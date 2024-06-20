@@ -45,9 +45,28 @@ class HomeViewModel @Inject constructor(
                     categoryUseCases.addCategory(newCategory)
                 }
             }
-            is HomeEvent.CategoryEvent.Delete -> {}
-            is HomeEvent.CategoryEvent.Pin -> {}
-            is HomeEvent.CategoryEvent.Select -> {}
+
+            is HomeEvent.CategoryEvent.Delete -> {
+                viewModelScope.launch {
+                    categoryUseCases.deleteCategory(state.value.categoryToManage)
+                }
+            }
+
+            is HomeEvent.CategoryEvent.Pin -> {
+            }
+
+            is HomeEvent.CategoryEvent.Selected -> {
+                _state.value = state.value.copy(
+                    selectedCategoryIndex = event.index,
+                    selectedCategory = event.category
+                )
+            }
+
+            is HomeEvent.CategoryEvent.ManageCategory -> {
+                _state.value = state.value.copy(
+                    categoryToManage = event.category
+                )
+            }
         }
     }
 

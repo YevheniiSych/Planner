@@ -51,6 +51,14 @@ fun CategoryListLayout(
 
                 val isSelected = selectedCategoryIndex == index
 
+                if (isCategoryMenuVisible) {
+                    callbacks.onMenuOpened(category)
+                }
+
+                if (isSelected) {
+                    callbacks.onCategorySelected(index, category)
+                }
+
                 Box(
                     modifier = Modifier
                         .clip(shape = CircleShape)
@@ -63,7 +71,6 @@ fun CategoryListLayout(
                             detectTapGestures(
                                 onTap = {
                                     selectedCategoryIndex = index
-                                    callbacks.onCategorySelected(index, category)
                                 },
                                 onLongPress = {
                                     if (category.id != Category.CATEGORY_ALL_ID) {
@@ -85,6 +92,7 @@ fun CategoryListLayout(
                             text = { Text(text = "Pin") },
                             onClick = {
                                 isCategoryMenuVisible = false
+                                callbacks.onPinItemClick()
                             }
                         )
                         DropdownMenuItem(
@@ -98,6 +106,7 @@ fun CategoryListLayout(
                             text = { Text(text = "Delete") },
                             onClick = {
                                 isCategoryMenuVisible = false
+                                callbacks.onDeleteItemClick()
                             }
                         )
                     }

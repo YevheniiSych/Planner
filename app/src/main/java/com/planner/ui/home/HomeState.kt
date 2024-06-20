@@ -8,10 +8,11 @@ data class HomeState(
     private val _categories: List<Category> = emptyList(),
     val categoryOrder: CategoryOrder = CategoryOrder.DateCreated(OrderType.DESC),
     val selectedCategoryIndex: Int = 0,
-    val selectedCategory: Category = Category.categoryAll,
+    val selectedCategory: Category = Category.CATEGORY_ALL,
+    val categoryToManage: Category = Category.EMPTY //Needs to make interactions with existing category (like interactions from Dropdown menu)
 ) {
     val categories: List<Category>
         get() {
-            return listOf(Category.categoryAll) + _categories
+            return listOf(Category.CATEGORY_ALL) + _categories
         }
 }

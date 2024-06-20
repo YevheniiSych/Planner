@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.planner.data.room.category.Category
+import com.planner.ui.components.ConfirmationDialog
 import com.planner.ui.home.category.AddCategoryDialog
 import com.planner.ui.home.category.CategoriesLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
@@ -20,19 +21,27 @@ fun HomeScreen(
         mutableStateOf(false)
     }
 
+    var isDeleteCategoryDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     CategoryListLayout(
         categories = state.categories,
         callbacks = object : CategoriesLayoutCallbacks {
             override fun onCategorySelected(index: Int, category: Category) {
-                onEvent(HomeEvent.CategoryEvent.Select(index, category))
+                onEvent(HomeEvent.CategoryEvent.Selected(index, category))
+            }
+
+            override fun onMenuOpened(category: Category) {
+                onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
             }
 
             override fun onPinItemClick(category: Category) {
-                onEvent(HomeEvent.CategoryEvent.Pin(category))
+//                onEvent(HomeEvent.CategoryEvent.Pin)
             }
 
             override fun onDeleteItemClick(category: Category) {
-
+                isDeleteCategoryDialogVisible = true
             }
 
             override fun onAddNewItemClick() {
@@ -50,6 +59,20 @@ fun HomeScreen(
             onSaveButtonClick = {
                 isAddNewCategoryDialogVisible = false
                 onEvent(HomeEvent.CategoryEvent.AddNew(it))
+            }
+        )
+    }
+
+    if (isDeleteCategoryDialogVisible) {
+        ConfirmationDialog(
+            title = "Delete the category?",
+            text = "All tasks in this category will be deleted.",
+            onConfirm = {
+                isDeleteCategoryDialogVisible = false
+                onEvent(HomeEvent.CategoryEvent.Delete)
+            },
+            onDismiss = {
+                isDeleteCategoryDialogVisible = false
             }
         )
     }

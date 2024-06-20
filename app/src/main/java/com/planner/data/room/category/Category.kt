@@ -7,16 +7,17 @@ import androidx.room.PrimaryKey
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val title: String,
+    val title: String = "",
     val dateCreatedTimestamp: Long = System.currentTimeMillis()
 ) {
     companion object {
         const val CATEGORY_ALL_ID = -1
-        val categoryAll = Category(
+        val CATEGORY_ALL = Category(
             id = CATEGORY_ALL_ID,
             title = "All",
             dateCreatedTimestamp = -1
         )
+        val EMPTY = Category()
     }
 }
 
