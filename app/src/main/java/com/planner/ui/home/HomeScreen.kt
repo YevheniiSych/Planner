@@ -1,33 +1,14 @@
 package com.planner.ui.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
-import com.planner.ui.components.AddCategoryDialog
-import com.planner.ui.theme.SelectedCategoryItemColor
-import com.planner.ui.theme.UnselectedCategoryItemColor
+import com.planner.ui.home.category.AddCategoryDialog
+import com.planner.ui.home.category.CategoriesLayoutCallbacks
+import com.planner.ui.home.category.CategoryListLayout
 
 @Composable
 fun HomeScreen(
@@ -35,138 +16,41 @@ fun HomeScreen(
     onEvent: (HomeEvent) -> Unit
 ) {
 
-    CategoriesList(
-        taskCategories = state.categories,
-        onItemClick = {
+    var isAddNewCategoryDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
 
-        },
-        onEvent = {
-            onEvent(it)
+    CategoryListLayout(
+        categories = state.categories,
+        callbacks = object : CategoriesLayoutCallbacks {
+            override fun onCategorySelected(index: Int, category: Category) {
+                onEvent(HomeEvent.CategoryEvent.Select(index, category))
+            }
+
+            override fun onPinItemClick(category: Category) {
+                onEvent(HomeEvent.CategoryEvent.Pin(category))
+            }
+
+            override fun onDeleteItemClick(category: Category) {
+
+            }
+
+            override fun onAddNewItemClick() {
+                isAddNewCategoryDialogVisible = true
+            }
+
         }
     )
-}
 
-@Composable
-fun CategoriesList(
-    taskCategories: List<Category>,
-    onItemClick: (Category) -> Unit,
-    onEvent: (HomeEvent) -> Unit
-) {
-    var selectedCategoryIndex by remember {
-        mutableIntStateOf(0)
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            itemsIndexed(taskCategories) { index, category ->
-
-                val isSelected = selectedCategoryIndex == index
-
-                CategoryItem(
-                    category = category,
-                    isSelected = isSelected,
-                    onItemClick = {
-                        selectedCategoryIndex = index
-                        onItemClick(it)
-                    },
-                    onEvent = onEvent
-                )
-
-            }
-        }
-    }
-}
-
-@Composable
-fun CategoryItem(
-    category: Category,
-    isSelected: Boolean,
-    onItemClick: (Category) -> Unit,
-    onEvent: (HomeEvent) -> Unit
-) {
-
-    var isCategoryMenuVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    Box(
-        modifier = Modifier
-            .clip(shape = CircleShape)
-            .background(
-                color = if (isSelected) SelectedCategoryItemColor
-                else UnselectedCategoryItemColor
-            )
-            .padding(horizontal = 15.dp, vertical = 2.dp)
-            .pointerInput(true) {
-                detectTapGestures(
-                    onTap = { onItemClick(category) },
-                    onLongPress = {
-                        if (category.id != Category.CATEGORY_ALL_ID) {
-                            isCategoryMenuVisible = true
-                        }
-                    }
-                )
-            }
-    ) {
-        Text(text = category.title)
-
-        CategoryMenu(
-            expanded = isCategoryMenuVisible,
-            category = category,
-            onDismissRequest = {
-                isCategoryMenuVisible = false
-            }
-        ) {
-            onEvent(it)
-            isCategoryMenuVisible = false
-        }
-    }
-}
-
-@Composable
-fun CategoryMenu(
-    expanded: Boolean,
-    category: Category,
-    onDismissRequest: () -> Unit,
-    onEvent: (HomeEvent) -> Unit
-) {
-    var isAddCategoryDialogVisible by remember {
-        mutableStateOf(false)
-    }
-    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
-        DropdownMenuItem(
-            text = { Text(text = "Pin") },
-            onClick = {
-                onEvent(HomeEvent.PinCategory(category))
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(text = "Add new") },
-            onClick = {
-                isAddCategoryDialogVisible = true
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(text = "Delete") },
-            onClick = {
-                onEvent(HomeEvent.DeleteCategory(category))
-            }
-        )
-    }
-
-    if (isAddCategoryDialogVisible) {
+    if (isAddNewCategoryDialogVisible) {
         AddCategoryDialog(
             onDismiss = {
-                isAddCategoryDialogVisible = false
+                isAddNewCategoryDialogVisible = false
             },
             onSaveButtonClick = {
-                isAddCategoryDialogVisible = false
+                isAddNewCategoryDialogVisible = false
+                onEvent(HomeEvent.CategoryEvent.AddNew(it))
             }
         )
     }
-
 }

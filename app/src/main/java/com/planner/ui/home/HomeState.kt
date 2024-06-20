@@ -6,7 +6,9 @@ import com.planner.data.util.category.CategoryOrder
 
 data class HomeState(
     private val _categories: List<Category> = emptyList(),
-    val categoryOrder: CategoryOrder = CategoryOrder.DateCreated(OrderType.DESC)
+    val categoryOrder: CategoryOrder = CategoryOrder.DateCreated(OrderType.DESC),
+    val selectedCategoryIndex: Int = 0,
+    val selectedCategory: Category = Category.categoryAll,
 ) {
     val categories: List<Category>
         get() {

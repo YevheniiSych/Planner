@@ -1,4 +1,4 @@
-package com.planner
+package com.planner.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

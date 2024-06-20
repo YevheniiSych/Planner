@@ -28,7 +28,20 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onEvent(event: HomeEvent) {
+        when(event){
+            is HomeEvent.CategoryEvent -> onCategoryEvent(event)
+        }
+    }
 
+    private fun onCategoryEvent(event: HomeEvent.CategoryEvent) {
+        when(event){
+            is HomeEvent.CategoryEvent.AddNew -> {
+
+            }
+            is HomeEvent.CategoryEvent.Delete -> {}
+            is HomeEvent.CategoryEvent.Pin -> {}
+            is HomeEvent.CategoryEvent.Select -> {}
+        }
     }
 
     private fun getCategories(categoryOrder: CategoryOrder) {
