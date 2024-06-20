@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.planner.ui.theme.Blue10
-import com.planner.ui.theme.BlueGray
-import com.planner.ui.theme.LightBlue
 
 @Preview
 @Composable
@@ -62,10 +60,14 @@ fun AddCategoryDialog(
                 fontSize = 16.sp
             )
 
+            val maxChar = 15
+
             TextField(
                 value = categoryName,
                     onValueChange = {
-                        categoryName = it
+                        if (maxChar >= it.length) {
+                            categoryName = it
+                        }
                     },
                 singleLine = true,
                 textStyle = TextStyle(
@@ -77,7 +79,7 @@ fun AddCategoryDialog(
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
                     cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedContainerColor = Blue10,
+                    focusedContainerColor = Color.LightGray,
                     unfocusedContainerColor = Color.LightGray
                 ),
                 modifier = Modifier

@@ -8,7 +8,7 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
-    val dateCreatedTimestamp: Long
+    val dateCreatedTimestamp: Long = System.currentTimeMillis()
 ) {
     companion object {
         const val CATEGORY_ALL_ID = -1
