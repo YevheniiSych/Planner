@@ -76,6 +76,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .weight(1f),
                 categories = state.categories,
+                selectedCategoryIndex = state.selectedCategoryIndex,
                 callbacks = object : CategoriesLayoutCallbacks {
                     override fun onCategorySelected(index: Int, category: Category) {
                         onEvent(HomeEvent.CategoryEvent.Selected(index, category))

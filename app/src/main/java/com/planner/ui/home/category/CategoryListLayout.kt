@@ -14,9 +14,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,11 +29,9 @@ import com.planner.ui.theme.LightBlue
 fun CategoryListLayout(
     modifier: Modifier = Modifier,
     categories: List<Category>,
+    selectedCategoryIndex: Int,
     callbacks: CategoriesLayoutCallbacks
 ) {
-    var selectedCategoryIndex by remember {
-        mutableIntStateOf(0)
-    }
 
     Column(
         modifier = modifier
@@ -55,10 +51,6 @@ fun CategoryListLayout(
                     callbacks.onMenuOpened(category)
                 }
 
-                if (isSelected) {
-                    callbacks.onCategorySelected(index, category)
-                }
-
                 Box(
                     modifier = Modifier
                         .clip(shape = CircleShape)
@@ -70,7 +62,7 @@ fun CategoryListLayout(
                         .pointerInput(true) {
                             detectTapGestures(
                                 onTap = {
-                                    selectedCategoryIndex = index
+                                    callbacks.onCategorySelected(index, category)
                                 },
                                 onLongPress = {
                                     if (category.id != Category.CATEGORY_ALL_ID) {
