@@ -7,5 +7,4 @@ interface CategoriesLayoutCallbacks {
     fun onMenuOpened(category: Category)
     fun onPinItemClick()
     fun onDeleteItemClick()
-    fun onAddNewItemClick()
 }

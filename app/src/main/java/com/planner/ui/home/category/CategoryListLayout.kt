@@ -5,7 +5,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,6 +29,7 @@ import com.planner.ui.theme.LightBlue
 
 @Composable
 fun CategoryListLayout(
+    modifier: Modifier = Modifier,
     categories: List<Category>,
     callbacks: CategoriesLayoutCallbacks
 ) {
@@ -38,7 +38,7 @@ fun CategoryListLayout(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -93,13 +93,6 @@ fun CategoryListLayout(
                             onClick = {
                                 isCategoryMenuVisible = false
                                 callbacks.onPinItemClick()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = "Add new") },
-                            onClick = {
-                                isCategoryMenuVisible = false
-                                callbacks.onAddNewItemClick()
                             }
                         )
                         DropdownMenuItem(
