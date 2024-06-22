@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.planner.data.room.category.Category
 import com.planner.data.use_case.category.CategoryUseCases
-import com.planner.data.util.OrderType
-import com.planner.data.util.category.CategoryOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private var getCategoriesJob: Job? = null
 
     init {
-        getCategories(CategoryOrder.DateCreated(OrderType.DESC))
+        getCategories()
     }
 
     fun onEvent(event: HomeEvent) {
@@ -78,13 +76,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getCategories(categoryOrder: CategoryOrder) {
+    private fun getCategories() {
         getCategoriesJob?.cancel()
-        getCategoriesJob = categoryUseCases.getCategories(categoryOrder)
+        getCategoriesJob = categoryUseCases.getCategories()
             .onEach {
                 _state.value = state.value.copy(
-                    _categories = it,
-                    categoryOrder = categoryOrder
+                    _categories = it
                 )
             }
             .launchIn(viewModelScope)
