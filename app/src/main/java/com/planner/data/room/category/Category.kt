@@ -20,7 +20,8 @@ data class Category(
         val CATEGORY_ALL = Category(
             id = CATEGORY_ALL_ID,
             title = "All",
-            dateCreatedTimestamp = -1
+            dateCreatedTimestamp = -1,
+            isPinned = true
         )
         val EMPTY = Category()
     }

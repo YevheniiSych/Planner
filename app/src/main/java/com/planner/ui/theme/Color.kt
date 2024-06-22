@@ -14,3 +14,6 @@ val LightBlue = Color(0xFF7FABF2)
 val Blue10 = Color(0xFFD1DDF0)
 
 val BlueGray = Color(0xFFD8DCE2)
+
+val Yellow = Color(0xFFFFEB3B)
+val LightYellow = Color(0xFFF5EDA6)

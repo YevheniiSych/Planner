@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
 import com.planner.ui.theme.Blue10
 import com.planner.ui.theme.LightBlue
+import com.planner.ui.theme.LightYellow
+import com.planner.ui.theme.Yellow
 
 @Composable
 fun CategoryListLayout(
@@ -55,8 +57,12 @@ fun CategoryListLayout(
                     modifier = Modifier
                         .clip(shape = CircleShape)
                         .background(
-                            color = if (isSelected) LightBlue
-                            else Blue10
+                            color = when {
+                                isSelected && category.isPinned -> Yellow
+                                isSelected -> LightBlue
+                                category.isPinned -> LightYellow
+                                else -> Blue10
+                            }
                         )
                         .padding(horizontal = 15.dp, vertical = 2.dp)
                         .pointerInput(true) {
