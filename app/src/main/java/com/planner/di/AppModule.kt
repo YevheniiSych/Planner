@@ -9,6 +9,7 @@ import com.planner.data.use_case.category.AddCategoryUseCase
 import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.category.DeleteCategoryUseCase
 import com.planner.data.use_case.category.GetCategoriesUseCase
+import com.planner.data.use_case.category.UpdateCategoryUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +40,8 @@ object AppModule {
         return CategoryUseCases(
             addCategory = AddCategoryUseCase(repository),
             deleteCategory = DeleteCategoryUseCase(repository),
-            getCategories = GetCategoriesUseCase(repository)
+            getCategories = GetCategoriesUseCase(repository),
+            updateCategoryUseCase = UpdateCategoryUseCase(repository)
         )
     }
 }

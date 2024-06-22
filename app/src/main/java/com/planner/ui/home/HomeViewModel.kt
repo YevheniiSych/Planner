@@ -9,6 +9,7 @@ import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.util.OrderType
 import com.planner.data.util.category.CategoryOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -38,7 +39,7 @@ class HomeViewModel @Inject constructor(
     private fun onCategoryEvent(event: HomeEvent.CategoryEvent) {
         when(event){
             is HomeEvent.CategoryEvent.AddNew -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     val newCategory = Category(
                         title = event.categoryName
                     )
@@ -47,12 +48,19 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeEvent.CategoryEvent.Delete -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     categoryUseCases.deleteCategory(state.value.categoryToManage)
                 }
             }
 
             is HomeEvent.CategoryEvent.Pin -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val pinnedCategory = state.value.categoryToManage.copy(
+                        isPinned = event.isPinned,
+                        lastPinTime = System.currentTimeMillis()
+                    )
+                    categoryUseCases.updateCategoryUseCase(pinnedCategory)
+                }
             }
 
             is HomeEvent.CategoryEvent.Selected -> {

@@ -87,10 +87,10 @@ fun CategoryListLayout(
                         },
                     ) {
                         DropdownMenuItem(
-                            text = { Text(text = "Pin") },
+                            text = { Text(text = if (category.isPinned) "Unpin" else "Pin") },
                             onClick = {
                                 isCategoryMenuVisible = false
-                                callbacks.onPinItemClick()
+                                callbacks.onPinItemClick(!category.isPinned)
                             }
                         )
                         DropdownMenuItem(

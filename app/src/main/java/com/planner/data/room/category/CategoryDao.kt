@@ -3,6 +3,7 @@ package com.planner.data.room.category
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +18,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM category")
     fun getCategories(): Flow<List<Category>>
+
+    @Update
+    fun updateCategory(category: Category)
 }

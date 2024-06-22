@@ -86,8 +86,8 @@ fun HomeScreen(
                         onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
                     }
 
-                    override fun onPinItemClick() {
-//                onEvent(HomeEvent.CategoryEvent.Pin)
+                    override fun onPinItemClick(isPinned: Boolean) {
+                        onEvent(HomeEvent.CategoryEvent.Pin(isPinned))
                     }
 
                     override fun onDeleteItemClick() {

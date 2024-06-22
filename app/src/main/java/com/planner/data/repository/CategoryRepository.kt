@@ -11,6 +11,8 @@ interface CategoryRepository {
     suspend fun deleteCategory(category: Category)
 
     fun getCategories(): Flow<List<Category>>
+
+   suspend fun updateCategory(category: Category)
 }
 
 class CategoryRepositoryImpl(
@@ -27,6 +29,10 @@ class CategoryRepositoryImpl(
 
     override fun getCategories(): Flow<List<Category>> {
         return categoryDao.getCategories()
+    }
+
+    override suspend fun updateCategory(category: Category) {
+        return categoryDao.updateCategory(category)
     }
 
 
