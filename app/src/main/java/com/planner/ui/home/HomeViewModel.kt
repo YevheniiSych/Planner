@@ -4,13 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.planner.data.room.category.Category
+import com.planner.data.room.category.CategoryEntity
 import com.planner.data.use_case.category.CategoryUseCases
+import com.planner.ui.home.category.CategoryItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +20,7 @@ class HomeViewModel @Inject constructor(
     private val _state = mutableStateOf(HomeState())
     val state: State<HomeState> = _state
 
-    private var getCategoriesJob: Job? = null
+    private var categoryEntities: List<CategoryEntity> = emptyList()
 
     init {
         getCategories()
@@ -38,26 +36,29 @@ class HomeViewModel @Inject constructor(
         when(event){
             is HomeEvent.CategoryEvent.AddNew -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val newCategory = Category(
+                    val newCategoryEntity = CategoryEntity(
                         title = event.categoryName
                     )
-                    categoryUseCases.addCategory(newCategory)
+                    categoryUseCases.addCategory(newCategoryEntity)
                 }
             }
 
             is HomeEvent.CategoryEvent.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    categoryUseCases.deleteCategory(state.value.categoryToManage)
+                    state.value.categoryToManage.getAssociatedCategoryEntity()?.let {
+                        categoryUseCases.deleteCategory(it)
+                    }
                 }
             }
 
             is HomeEvent.CategoryEvent.Pin -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val pinnedCategory = state.value.categoryToManage.copy(
+                    state.value.categoryToManage.getAssociatedCategoryEntity()?.copy(
                         isPinned = event.isPinned,
                         lastPinTime = System.currentTimeMillis()
-                    )
-                    categoryUseCases.updateCategoryUseCase(pinnedCategory)
+                    )?.let {
+                        categoryUseCases.updateCategoryUseCase(it)
+                    }
                 }
             }
 
@@ -77,14 +78,25 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getCategories() {
-        getCategoriesJob?.cancel()
-        getCategoriesJob = categoryUseCases.getCategories()
-            .onEach {
+        viewModelScope.launch {
+            categoryUseCases.getCategories().collect {
+                categoryEntities = it
                 _state.value = state.value.copy(
-                    _categories = it
+                    _categories = it.toUIItems()
                 )
             }
-            .launchIn(viewModelScope)
+        }
+    }
+
+    private fun CategoryItem.getAssociatedCategoryEntity() =
+        categoryEntities.firstOrNull { this.id == it.id }
+
+    private fun List<CategoryEntity>.toUIItems() = this.map {
+        CategoryItem(
+            id = it.id,
+            title = it.title,
+            isPinned = it.isPinned
+        )
     }
 
 }

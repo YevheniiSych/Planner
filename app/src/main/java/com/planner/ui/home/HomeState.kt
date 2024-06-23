@@ -1,15 +1,15 @@
 package com.planner.ui.home
 
-import com.planner.data.room.category.Category
+import com.planner.ui.home.category.CategoryItem
 
 data class HomeState(
-    private val _categories: List<Category> = emptyList(),
+    private val _categories: List<CategoryItem> = emptyList(),
     val selectedCategoryIndex: Int = 0,
-    val selectedCategory: Category = Category.CATEGORY_ALL,
-    val categoryToManage: Category = Category.EMPTY //Needs to make interactions with existing category (like interactions from Dropdown menu)
+    val selectedCategory: CategoryItem = CategoryItem.CATEGORY_ALL,
+    val categoryToManage: CategoryItem = CategoryItem.EMPTY //Needs to make interactions with existing category (like interactions from Dropdown menu)
 ) {
-    val categories: List<Category>
+    val categories: List<CategoryItem>
         get() {
-            return listOf(Category.CATEGORY_ALL) + _categories
+            return listOf(CategoryItem.CATEGORY_ALL) + _categories
         }
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.planner.data.room.category.Category
 import com.planner.ui.theme.Blue10
 import com.planner.ui.theme.LightBlue
 import com.planner.ui.theme.LightYellow
@@ -30,8 +29,8 @@ import com.planner.ui.theme.Yellow
 @Composable
 fun CategoryListLayout(
     modifier: Modifier = Modifier,
-    categories: List<Category>,
-    selectedCategoryIndex: Int,
+    categories: List<CategoryItem>,
+    selectedCategoryEntity: CategoryItem,
     callbacks: CategoriesLayoutCallbacks
 ) {
 
@@ -47,7 +46,7 @@ fun CategoryListLayout(
                     mutableStateOf(false)
                 }
 
-                val isSelected = selectedCategoryIndex == index
+                val isSelected = selectedCategoryEntity.id == category.id
 
                 if (isCategoryMenuVisible) {
                     callbacks.onMenuOpened(category)
@@ -71,7 +70,7 @@ fun CategoryListLayout(
                                     callbacks.onCategorySelected(index, category)
                                 },
                                 onLongPress = {
-                                    if (category.id != Category.CATEGORY_ALL_ID) {
+                                    if (category.id != CategoryItem.CATEGORY_ALL_ID) {
                                         isCategoryMenuVisible = true
                                     }
                                 }

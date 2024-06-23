@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryDao {
 
     @Upsert
-    suspend fun upsertCategory(category: Category)
+    suspend fun upsertCategory(categoryEntity: CategoryEntity)
 
     @Delete
-    suspend fun deleteCategory(category: Category)
+    suspend fun deleteCategory(categoryEntity: CategoryEntity)
 
     @Query("SELECT * FROM category")
-    fun getCategories(): Flow<List<Category>>
+    fun getCategories(): Flow<List<CategoryEntity>>
 
     @Update
-    fun updateCategory(category: Category)
+    fun updateCategory(categoryEntity: CategoryEntity)
 }
