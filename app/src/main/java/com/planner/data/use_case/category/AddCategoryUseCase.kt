@@ -1,7 +1,7 @@
 package com.planner.data.use_case.category
 
 import com.planner.data.repository.CategoryRepository
-import com.planner.data.room.category.CategoryEntity
+import com.planner.data.room.category.Category
 import com.planner.data.room.category.InvalidCategoryException
 
 class AddCategoryUseCase(
@@ -9,11 +9,11 @@ class AddCategoryUseCase(
 ) {
 
     @Throws(InvalidCategoryException::class)
-    suspend operator fun invoke(categoryEntity: CategoryEntity) {
-        if (categoryEntity.title.isBlank()) {
+    suspend operator fun invoke(category: Category) {
+        if (category.title.isBlank()) {
             throw InvalidCategoryException("Category title should not be be blank")
         }
-        repository.addCategory(categoryEntity)
+        repository.addCategory(category)
     }
 }
 

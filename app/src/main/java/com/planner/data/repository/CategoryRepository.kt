@@ -1,38 +1,38 @@
 package com.planner.data.repository
 
+import com.planner.data.room.category.Category
 import com.planner.data.room.category.CategoryDao
-import com.planner.data.room.category.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
 
-    suspend fun addCategory(categoryEntity: CategoryEntity)
+    suspend fun addCategory(category: Category)
 
-    suspend fun deleteCategory(categoryEntity: CategoryEntity)
+    suspend fun deleteCategory(category: Category)
 
-    fun getCategories(): Flow<List<CategoryEntity>>
+    fun getCategories(): Flow<List<Category>>
 
-    suspend fun updateCategory(categoryEntity: CategoryEntity)
+   suspend fun updateCategory(category: Category)
 }
 
 class CategoryRepositoryImpl(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {
 
-    override suspend fun addCategory(categoryEntity: CategoryEntity) {
-        categoryDao.upsertCategory(categoryEntity)
+    override suspend fun addCategory(category: Category) {
+        categoryDao.upsertCategory(category)
     }
 
-    override suspend fun deleteCategory(categoryEntity: CategoryEntity) {
-        categoryDao.deleteCategory(categoryEntity)
+    override suspend fun deleteCategory(category: Category) {
+        categoryDao.deleteCategory(category)
     }
 
-    override fun getCategories(): Flow<List<CategoryEntity>> {
+    override fun getCategories(): Flow<List<Category>> {
         return categoryDao.getCategories()
     }
 
-    override suspend fun updateCategory(categoryEntity: CategoryEntity) {
-        return categoryDao.updateCategory(categoryEntity)
+    override suspend fun updateCategory(category: Category) {
+        return categoryDao.updateCategory(category)
     }
 
 

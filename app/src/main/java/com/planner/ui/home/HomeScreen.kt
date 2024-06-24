@@ -1,6 +1,5 @@
 package com.planner.ui.home
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,18 +12,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.planner.data.room.category.Category
 import com.planner.ui.components.ConfirmationDialog
 import com.planner.ui.home.category.AddCategoryDialog
 import com.planner.ui.home.category.CategoriesLayoutCallbacks
-import com.planner.ui.home.category.CategoryItem
 import com.planner.ui.home.category.CategoryListLayout
 
 @Composable
@@ -38,10 +35,6 @@ fun HomeScreen(
     }
 
     var isDeleteCategoryDialogVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    var showTestingToast by remember {
         mutableStateOf(false)
     }
 
@@ -71,12 +64,6 @@ fun HomeScreen(
         )
     }
 
-    if (showTestingToast) {
-        Toast.makeText(LocalContext.current, state.selectedCategory.title, Toast.LENGTH_SHORT)
-            .show()
-        showTestingToast = false
-    }
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -89,14 +76,13 @@ fun HomeScreen(
                 modifier = Modifier
                     .weight(1f),
                 categories = state.categories,
-                selectedCategoryEntity = state.selectedCategory,
+                selectedCategoryIndex = state.selectedCategoryIndex,
                 callbacks = object : CategoriesLayoutCallbacks {
-                    override fun onCategorySelected(index: Int, category: CategoryItem) {
+                    override fun onCategorySelected(index: Int, category: Category) {
                         onEvent(HomeEvent.CategoryEvent.Selected(index, category))
-                        showTestingToast = true
                     }
 
-                    override fun onMenuOpened(category: CategoryItem) {
+                    override fun onMenuOpened(category: Category) {
                         onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
                     }
 
