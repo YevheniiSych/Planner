@@ -48,6 +48,9 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.CategoryEvent.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     categoryUseCases.deleteCategory(state.value.categoryToManage)
+                    _state.value = state.value.copy(
+                        selectedCategoryIndex = 0
+                    )
                 }
             }
 
@@ -63,8 +66,7 @@ class HomeViewModel @Inject constructor(
 
             is HomeEvent.CategoryEvent.Selected -> {
                 _state.value = state.value.copy(
-                    selectedCategoryIndex = event.index,
-                    selectedCategory = event.category
+                    selectedCategoryIndex = event.index
                 )
             }
 

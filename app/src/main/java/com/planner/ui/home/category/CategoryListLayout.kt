@@ -68,7 +68,7 @@ fun CategoryListLayout(
                         .pointerInput(true) {
                             detectTapGestures(
                                 onTap = {
-                                    callbacks.onCategorySelected(index, category)
+                                    callbacks.onCategorySelected(index)
                                 },
                                 onLongPress = {
                                     if (category.id != Category.CATEGORY_ALL_ID) {
