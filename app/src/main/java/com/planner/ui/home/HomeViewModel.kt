@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.planner.data.room.category.Category
 import com.planner.data.use_case.category.CategoryUseCases
+import com.planner.data.use_case.task.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases
+    private val categoryUseCases: CategoryUseCases,
+    private val taskUseCases: TaskUseCases
 ) : ViewModel() {
 
     private val _state = mutableStateOf(HomeState())
@@ -31,6 +33,21 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when(event){
             is HomeEvent.CategoryEvent -> onCategoryEvent(event)
+            is HomeEvent.TaskEvent -> onTaskEvent(event)
+        }
+    }
+
+    private fun onTaskEvent(event: HomeEvent.TaskEvent) {
+        when (event) {
+            is HomeEvent.TaskEvent.AddNew -> {
+
+            }
+            is HomeEvent.TaskEvent.Complete -> {
+
+            }
+            is HomeEvent.TaskEvent.Delete -> {
+
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.planner.ui.home
 
 import com.planner.data.room.category.Category
+import com.planner.data.room.task.Task
 
 sealed class HomeEvent {
     sealed class CategoryEvent: HomeEvent() {
@@ -11,5 +12,10 @@ sealed class HomeEvent {
         data class ManageCategory(val category: Category): CategoryEvent()
     }
 
+    sealed class TaskEvent: HomeEvent() {
+        data class AddNew(val text: String, val reminderTime: Long): TaskEvent()
+        data class Delete(val task: Task): TaskEvent()
+        data class Complete(val task: Task): TaskEvent()
+    }
 
 }
