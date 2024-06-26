@@ -2,7 +2,6 @@ package com.planner.data.use_case.category
 
 import com.planner.data.repository.CategoryRepository
 import com.planner.data.room.category.Category
-import com.planner.data.util.category.CategoryOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

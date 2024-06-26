@@ -11,7 +11,7 @@ class AddCategoryUseCase(
     @Throws(InvalidCategoryException::class)
     suspend operator fun invoke(category: Category) {
         if (category.title.isBlank()) {
-            throw InvalidCategoryException("Category title should not be be blank")
+            throw InvalidCategoryException("Category title should not be blank")
         }
         repository.addCategory(category)
     }

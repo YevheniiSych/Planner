@@ -3,13 +3,20 @@ package com.planner.di
 import android.app.Application
 import androidx.room.Room
 import com.planner.data.repository.CategoryRepository
-import com.planner.data.repository.CategoryRepositoryImpl
+import com.planner.data.repository.TaskRepository
+import com.planner.data.repository.createCategoryRepository
+import com.planner.data.repository.createTaskRepository
 import com.planner.data.room.PlannerDatabase
 import com.planner.data.use_case.category.AddCategoryUseCase
 import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.category.DeleteCategoryUseCase
 import com.planner.data.use_case.category.GetCategoriesUseCase
 import com.planner.data.use_case.category.UpdateCategoryUseCase
+import com.planner.data.use_case.task.AddTaskUseCase
+import com.planner.data.use_case.task.DeleteTaskUseCase
+import com.planner.data.use_case.task.GetTasksUseCase
+import com.planner.data.use_case.task.TaskUseCases
+import com.planner.data.use_case.task.UpdateTaskUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +38,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCategoryRepository(db: PlannerDatabase): CategoryRepository {
-        return CategoryRepositoryImpl(db.categoryDao)
+        return createCategoryRepository(db.categoryDao)
     }
 
     @Provides
@@ -42,6 +49,23 @@ object AppModule {
             deleteCategory = DeleteCategoryUseCase(repository),
             getCategories = GetCategoriesUseCase(repository),
             updateCategoryUseCase = UpdateCategoryUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTaskRepository(db: PlannerDatabase): TaskRepository {
+        return createTaskRepository(db.taskDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTaskUseCases(repository: TaskRepository): TaskUseCases {
+        return TaskUseCases(
+            addTaskUseCase = AddTaskUseCase(repository),
+            deleteTaskUseCase = DeleteTaskUseCase(repository),
+            updateTaskUseCase = UpdateTaskUseCase(repository),
+            getTasksUseCase = GetTasksUseCase(repository)
         )
     }
 }

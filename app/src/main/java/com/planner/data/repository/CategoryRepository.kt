@@ -4,6 +4,9 @@ import com.planner.data.room.category.Category
 import com.planner.data.room.category.CategoryDao
 import kotlinx.coroutines.flow.Flow
 
+fun createCategoryRepository(categoryDao: CategoryDao): CategoryRepository =
+    CategoryRepositoryImpl(categoryDao)
+
 interface CategoryRepository {
 
     suspend fun addCategory(category: Category)
@@ -15,7 +18,7 @@ interface CategoryRepository {
    suspend fun updateCategory(category: Category)
 }
 
-class CategoryRepositoryImpl(
+private class CategoryRepositoryImpl(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {
 
