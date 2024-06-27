@@ -134,7 +134,7 @@ fun HomeScreen(
                     .padding(bottom = 30.dp, end = 30.dp),
                 onClick = {
                     onEvent(
-                        HomeEvent.TaskEvent.AddNew("New task")
+                        HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
                     )
                 }
             ) {

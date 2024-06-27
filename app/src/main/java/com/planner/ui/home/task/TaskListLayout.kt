@@ -13,11 +13,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.planner.data.room.task.Task
 import com.planner.ui.home.HomeEvent
+import com.planner.ui.theme.Blue10
 import com.planner.ui.theme.LightGray
+import com.planner.ui.theme.LightYellow
+import com.planner.ui.theme.SuperLightGray
 
 @Composable
 fun TaskListLayout(
@@ -33,7 +39,10 @@ fun TaskListLayout(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = LightGray, shape = RoundedCornerShape(10.dp))
+                    .background(
+                        color = if (task.isCompleted) LightYellow else LightGray,
+                        shape = RoundedCornerShape(10.dp)
+                    )
                     .padding(horizontal = 10.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -44,8 +53,12 @@ fun TaskListLayout(
                 )
                 Text(
                     modifier = Modifier,
-                    text = "My task for today",
-                    fontSize = 16.sp
+                    text = task.text,
+                    fontSize = 16.sp,
+                    style = TextStyle(
+                        textDecoration = if (task.isCompleted) TextDecoration.LineThrough
+                        else TextDecoration.None
+                    )
                 )
             }
         }

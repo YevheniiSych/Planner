@@ -19,3 +19,4 @@ val Yellow = Color(0xFFFFEB3B)
 val LightYellow = Color(0xFFF5EDA6)
 
 val LightGray = Color(0xFFD8DEE6)
+val SuperLightGray= Color(0xFFE6E9EE)

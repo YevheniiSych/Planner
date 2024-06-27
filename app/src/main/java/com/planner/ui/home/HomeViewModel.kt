@@ -56,7 +56,13 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeEvent.TaskEvent.Complete -> {
-
+                viewModelScope.launch {
+                    taskUseCases.updateTaskUseCase(
+                        event.task.copy(
+                            isCompleted = !event.task.isCompleted
+                        )
+                    )
+                }
             }
             is HomeEvent.TaskEvent.Delete -> {
 
