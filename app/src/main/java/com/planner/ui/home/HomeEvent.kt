@@ -13,7 +13,11 @@ sealed class HomeEvent {
     }
 
     sealed class TaskEvent: HomeEvent() {
-        data class AddNew(val text: String, val reminderTime: Long): TaskEvent()
+        data class AddNew(
+            val text: String,
+            val categoryId: Int? = null,
+            val reminderTime: Long? = null
+        ) : TaskEvent()
         data class Delete(val task: Task): TaskEvent()
         data class Complete(val task: Task): TaskEvent()
     }

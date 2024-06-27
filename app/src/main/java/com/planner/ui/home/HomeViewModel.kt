@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.planner.data.room.category.Category
+import com.planner.data.room.task.Task
 import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.task.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +30,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getCategories()
+        getTasks()
     }
 
     fun onEvent(event: HomeEvent) {
@@ -40,7 +43,17 @@ class HomeViewModel @Inject constructor(
     private fun onTaskEvent(event: HomeEvent.TaskEvent) {
         when (event) {
             is HomeEvent.TaskEvent.AddNew -> {
-
+                viewModelScope.launch {
+                    taskUseCases.addTaskUseCase(
+                        Task(
+                            text = event.text,
+                            createdAt = System.currentTimeMillis(),
+                            categoryId = event.categoryId,
+                            reminderTime = event.reminderTime,
+                            isReminderEnabled = event.reminderTime != null
+                        )
+                    )
+                }
             }
             is HomeEvent.TaskEvent.Complete -> {
 
@@ -98,12 +111,23 @@ class HomeViewModel @Inject constructor(
     private fun getCategories() {
         getCategoriesJob?.cancel()
         getCategoriesJob = categoryUseCases.getCategories()
+            .map {
+                listOf(Category.CATEGORY_ALL) + it
+            }
             .onEach {
                 _state.value = state.value.copy(
-                    _categories = it
+                    categories = it
                 )
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun getTasks() {
+        taskUseCases.getTasksUseCase.getAllTasks().onEach { tasks ->
+            _state.value = state.value.copy(
+                tasks = tasks
+            )
+        }.launchIn(viewModelScope)
     }
 
 }

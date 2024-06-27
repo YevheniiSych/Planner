@@ -31,10 +31,10 @@ data class Task(
     val completedAt: Long = 0,
     @ColumnInfo(name = "isReminderEnabled", defaultValue = "false")
     val isReminderEnabled: Boolean = false,
-    @ColumnInfo(name = "reminderTime", defaultValue = "0")
-    val reminderTime: Long = 0,
+    @ColumnInfo(name = "reminderTime", defaultValue = "null")
+    val reminderTime: Long? = null,
     @ColumnInfo(name = "categoryId")
-    val categoryId: Int?
+    val categoryId: Int? = null
 )
 
 class InvalidTaskException(message: String): Exception(message)
