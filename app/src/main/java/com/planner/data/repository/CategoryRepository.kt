@@ -2,7 +2,9 @@ package com.planner.data.repository
 
 import com.planner.data.room.category.Category
 import com.planner.data.room.category.CategoryDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 fun createCategoryRepository(categoryDao: CategoryDao): CategoryRepository =
     CategoryRepositoryImpl(categoryDao)
@@ -22,11 +24,11 @@ private class CategoryRepositoryImpl(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {
 
-    override suspend fun addCategory(category: Category) {
+    override suspend fun addCategory(category: Category) = withContext((Dispatchers.IO)) {
         categoryDao.upsertCategory(category)
     }
 
-    override suspend fun deleteCategory(category: Category) {
+    override suspend fun deleteCategory(category: Category) = withContext((Dispatchers.IO)) {
         categoryDao.deleteCategory(category)
     }
 
@@ -34,9 +36,8 @@ private class CategoryRepositoryImpl(
         return categoryDao.getCategories()
     }
 
-    override suspend fun updateCategory(category: Category) {
-        return categoryDao.updateCategory(category)
+    override suspend fun updateCategory(category: Category) = withContext((Dispatchers.IO)) {
+        categoryDao.updateCategory(category)
     }
-
 
 }

@@ -2,7 +2,9 @@ package com.planner.data.repository
 
 import com.planner.data.room.task.Task
 import com.planner.data.room.task.TaskDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 fun createTaskRepository(taskDao: TaskDao): TaskRepository =
     TaskRepositoryImpl(taskDao)
@@ -20,16 +22,16 @@ interface TaskRepository {
 }
 
 class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
-    override suspend fun addTask(task: Task) {
-        return taskDao.upsertTask(task)
+    override suspend fun addTask(task: Task) = withContext((Dispatchers.IO)) {
+        taskDao.upsertTask(task)
     }
 
-    override suspend fun deleteTask(task: Task) {
-        return taskDao.deleteTask(task)
+    override suspend fun deleteTask(task: Task) = withContext((Dispatchers.IO)) {
+        taskDao.deleteTask(task)
     }
 
-    override suspend fun updateTask(task: Task) {
-        return taskDao.updateTask(task)
+    override suspend fun updateTask(task: Task) = withContext((Dispatchers.IO)) {
+        taskDao.updateTask(task)
     }
 
     override fun getTasks(): Flow<List<Task>> {
