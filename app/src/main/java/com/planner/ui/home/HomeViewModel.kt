@@ -65,7 +65,9 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeEvent.TaskEvent.Delete -> {
-
+                viewModelScope.launch {
+                    taskUseCases.deleteTaskUseCase(event.task)
+                }
             }
         }
     }

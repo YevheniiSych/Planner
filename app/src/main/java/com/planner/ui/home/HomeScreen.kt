@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
+import com.planner.data.room.task.Task
 import com.planner.ui.components.ConfirmationDialog
 import com.planner.ui.home.category.AddCategoryDialog
 import com.planner.ui.home.category.CategoriesLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
+import com.planner.ui.home.task.TaskLayoutCallbacks
 import com.planner.ui.home.task.TaskListLayout
 
 @Composable
@@ -126,7 +128,16 @@ fun HomeScreen(
                     .padding(10.dp)
                     .fillMaxSize(),
                 tasks = state.tasks,
-                onEvent = onEvent
+                callbacks = object : TaskLayoutCallbacks {
+                    override fun onDelete(task: Task) {
+                        onEvent(HomeEvent.TaskEvent.Delete(task))
+                    }
+
+                    override fun onComplete(task: Task) {
+                        onEvent(HomeEvent.TaskEvent.Complete(task))
+                    }
+
+                }
             )
             LargeFloatingActionButton(
                 modifier = Modifier
