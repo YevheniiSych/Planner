@@ -101,7 +101,7 @@ class HomeViewModel @Inject constructor(
 
             is HomeEvent.CategoryEvent.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    categoryUseCases.deleteCategory(state.value.categoryToManage)
+                    categoryUseCases.deleteCategory(event.category)
                     _state.value = state.value.copy(
                         selectedCategoryIndex = 0
                     )
@@ -110,23 +110,20 @@ class HomeViewModel @Inject constructor(
 
             is HomeEvent.CategoryEvent.Pin -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val pinnedCategory = state.value.categoryToManage.copy(
-                        isPinned = event.isPinned,
-                        lastPinTime = System.currentTimeMillis()
+                    val isPinned = !event.category.isPinned
+                    categoryUseCases.updateCategoryUseCase(
+                        event.category.copy(
+                            isPinned = isPinned,
+                            lastPinTime = if (isPinned) System.currentTimeMillis()
+                            else event.category.lastPinTime
+                        )
                     )
-                    categoryUseCases.updateCategoryUseCase(pinnedCategory)
                 }
             }
 
             is HomeEvent.CategoryEvent.Selected -> {
                 _state.value = state.value.copy(
                     selectedCategoryIndex = event.index
-                )
-            }
-
-            is HomeEvent.CategoryEvent.ManageCategory -> {
-                _state.value = state.value.copy(
-                    categoryToManage = event.category
                 )
             }
         }

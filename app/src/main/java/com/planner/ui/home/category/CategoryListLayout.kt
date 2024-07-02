@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
+import com.planner.ui.components.ConfirmationDialog
 import com.planner.ui.theme.Blue10
 import com.planner.ui.theme.LightBlue
 import com.planner.ui.theme.LightYellow
@@ -41,13 +42,33 @@ fun CategoryListLayout(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            itemsIndexed(categories) { index, category ->
+            itemsIndexed(
+                items = categories,
+                key = { _, category -> category.id }) { index, category ->
 
                 var isCategoryMenuVisible by rememberSaveable {
                     mutableStateOf(false)
                 }
 
+                var isDeleteCategoryDialogVisible by rememberSaveable {
+                    mutableStateOf(false)
+                }
+
                 val isSelected = selectedCategoryIndex == index
+
+                if (isDeleteCategoryDialogVisible) {
+                    ConfirmationDialog(
+                        title = "Delete the category?",
+                        text = "All tasks in this category will be deleted.",
+                        onConfirm = {
+                            callbacks.onDeleteCategory(category)
+                            isDeleteCategoryDialogVisible = false
+                        },
+                        onDismiss = {
+                            isDeleteCategoryDialogVisible = false
+                        }
+                    )
+                }
 
                 Box(
                     modifier = Modifier
@@ -69,7 +90,7 @@ fun CategoryListLayout(
                                 onLongPress = {
                                     if (category.id != Category.CATEGORY_ALL_ID) {
                                         isCategoryMenuVisible = true
-                                        callbacks.onMenuOpened(category)
+//                                        callbacks.onMenuOpened(category)
                                     }
                                 }
                             )
@@ -87,14 +108,14 @@ fun CategoryListLayout(
                             text = { Text(text = if (category.isPinned) "Unpin" else "Pin") },
                             onClick = {
                                 isCategoryMenuVisible = false
-                                callbacks.onPinItemClick(!category.isPinned)
+                                callbacks.onPinItemClick(category)
                             }
                         )
                         DropdownMenuItem(
                             text = { Text(text = "Delete") },
                             onClick = {
                                 isCategoryMenuVisible = false
-                                callbacks.onDeleteItemClick()
+                                callbacks.onDeleteCategory(category)
                             }
                         )
                     }

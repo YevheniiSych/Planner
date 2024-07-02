@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
 import com.planner.data.room.task.Task
-import com.planner.ui.components.ConfirmationDialog
 import com.planner.ui.home.category.AddCategoryDialog
 import com.planner.ui.home.category.CategoriesLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
@@ -53,10 +52,6 @@ fun HomeScreen(
         mutableStateOf(false)
     }
 
-    var isDeleteCategoryDialogVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     if (isAddNewCategoryDialogVisible) {
         AddCategoryDialog(
             onDismiss = {
@@ -65,20 +60,6 @@ fun HomeScreen(
             onSaveButtonClick = {
                 isAddNewCategoryDialogVisible = false
                 onEvent(HomeEvent.CategoryEvent.AddNew(it))
-            }
-        )
-    }
-
-    if (isDeleteCategoryDialogVisible) {
-        ConfirmationDialog(
-            title = "Delete the category?",
-            text = "All tasks in this category will be deleted.",
-            onConfirm = {
-                isDeleteCategoryDialogVisible = false
-                onEvent(HomeEvent.CategoryEvent.Delete)
-            },
-            onDismiss = {
-                isDeleteCategoryDialogVisible = false
             }
         )
     }
@@ -121,16 +102,12 @@ fun HomeScreen(
                             onEvent(HomeEvent.CategoryEvent.Selected(index))
                         }
 
-                        override fun onMenuOpened(category: Category) {
-                            onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
+                        override fun onPinItemClick(category: Category) {
+                            onEvent(HomeEvent.CategoryEvent.Pin(category))
                         }
 
-                        override fun onPinItemClick(isPinned: Boolean) {
-                            onEvent(HomeEvent.CategoryEvent.Pin(isPinned))
-                        }
-
-                        override fun onDeleteItemClick() {
-                            isDeleteCategoryDialogVisible = true
+                        override fun onDeleteCategory(category: Category) {
+                            onEvent(HomeEvent.CategoryEvent.Delete(category))
                         }
                     }
                 )
