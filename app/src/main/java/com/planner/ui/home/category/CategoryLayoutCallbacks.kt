@@ -2,8 +2,8 @@ package com.planner.ui.home.category
 
 import com.planner.data.room.category.Category
 
-interface CategoriesLayoutCallbacks {
-    fun onCategorySelected(index: Int)
-    fun onPinItemClick(category: Category)
+interface CategoryLayoutCallbacks {
+    fun onCategorySelected(category: Category)
+    fun onPinCategory(category: Category)
     fun onDeleteCategory(category: Category)
 }

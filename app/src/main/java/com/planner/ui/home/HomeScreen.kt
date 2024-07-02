@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
 import com.planner.data.room.task.Task
 import com.planner.ui.home.category.AddCategoryDialog
-import com.planner.ui.home.category.CategoriesLayoutCallbacks
+import com.planner.ui.home.category.CategoryLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
 import com.planner.ui.home.task.TaskLayoutCallbacks
 import com.planner.ui.home.task.TaskListLayout
@@ -96,13 +96,13 @@ fun HomeScreen(
                     modifier = Modifier
                         .weight(1f),
                     categories = state.categories,
-                    selectedCategoryIndex = state.selectedCategoryIndex,
-                    callbacks = object : CategoriesLayoutCallbacks {
-                        override fun onCategorySelected(index: Int) {
-                            onEvent(HomeEvent.CategoryEvent.Selected(index))
+                    selectedCategory = state.selectedCategory,
+                    callbacks = object : CategoryLayoutCallbacks {
+                        override fun onCategorySelected(category: Category) {
+                            onEvent(HomeEvent.CategoryEvent.Selected(category))
                         }
 
-                        override fun onPinItemClick(category: Category) {
+                        override fun onPinCategory(category: Category) {
                             onEvent(HomeEvent.CategoryEvent.Pin(category))
                         }
 

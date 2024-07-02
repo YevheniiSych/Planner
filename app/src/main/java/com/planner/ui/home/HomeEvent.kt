@@ -8,7 +8,7 @@ sealed class HomeEvent {
         data class Pin(val category: Category) : CategoryEvent()
         data class Delete(val category: Category) : CategoryEvent()
         data class AddNew(val categoryName: String): CategoryEvent()
-        data class Selected(val index: Int): CategoryEvent()
+        data class Selected(val category: Category): CategoryEvent()
     }
 
     sealed class TaskEvent: HomeEvent() {

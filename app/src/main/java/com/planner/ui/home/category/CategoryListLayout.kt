@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,8 +32,8 @@ import com.planner.ui.theme.Yellow
 fun CategoryListLayout(
     modifier: Modifier = Modifier,
     categories: List<Category>,
-    selectedCategoryIndex: Int,
-    callbacks: CategoriesLayoutCallbacks
+    selectedCategory: Category,
+    callbacks: CategoryLayoutCallbacks
 ) {
 
     Column(
@@ -42,19 +42,16 @@ fun CategoryListLayout(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            itemsIndexed(
+            items(
                 items = categories,
-                key = { _, category -> category.id }) { index, category ->
-
-                var isCategoryMenuVisible by rememberSaveable {
-                    mutableStateOf(false)
-                }
+                key = { it.id }
+            ) { category ->
 
                 var isDeleteCategoryDialogVisible by rememberSaveable {
                     mutableStateOf(false)
                 }
 
-                val isSelected = selectedCategoryIndex == index
+                val isSelected = selectedCategory.id == category.id
 
                 if (isDeleteCategoryDialogVisible) {
                     ConfirmationDialog(
@@ -70,58 +67,85 @@ fun CategoryListLayout(
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .background(
-                            color = when {
-                                isSelected && category.isPinned -> Yellow
-                                isSelected -> LightBlue
-                                category.isPinned -> LightYellow
-                                else -> Blue10
-                            }
-                        )
-                        .padding(horizontal = 15.dp, vertical = 2.dp)
-                        .pointerInput(category) {
-                            detectTapGestures(
-                                onTap = {
-                                    callbacks.onCategorySelected(index)
-                                },
-                                onLongPress = {
-                                    if (category.id != Category.CATEGORY_ALL_ID) {
-                                        isCategoryMenuVisible = true
-//                                        callbacks.onMenuOpened(category)
-                                    }
-                                }
-                            )
-                        }
-                ) {
-                    Text(text = category.title)
-
-                    DropdownMenu(
-                        expanded = isCategoryMenuVisible,
-                        onDismissRequest = {
-                            isCategoryMenuVisible = false
-                        },
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(text = if (category.isPinned) "Unpin" else "Pin") },
-                            onClick = {
-                                isCategoryMenuVisible = false
-                                callbacks.onPinItemClick(category)
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = "Delete") },
-                            onClick = {
-                                isCategoryMenuVisible = false
-                                callbacks.onDeleteCategory(category)
-                            }
-                        )
+                CategoryItem(
+                    category = category,
+                    isSelected = isSelected,
+                    onDelete = {
+                        isDeleteCategoryDialogVisible = true
+                    },
+                    onPin = {
+                        callbacks.onPinCategory(category)
+                    },
+                    onClick = {
+                        callbacks.onCategorySelected(category)
                     }
-                }
+                )
 
             }
+        }
+    }
+}
+
+@Composable
+private fun CategoryItem(
+    category: Category,
+    isSelected: Boolean,
+    onDelete: () -> Unit,
+    onPin: () -> Unit,
+    onClick: () -> Unit
+) {
+    var isCategoryMenuVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+
+    Box(
+        modifier = Modifier
+            .clip(shape = CircleShape)
+            .background(
+                color = when {
+                    isSelected && category.isPinned -> Yellow
+                    isSelected -> LightBlue
+                    category.isPinned -> LightYellow
+                    else -> Blue10
+                }
+            )
+            .padding(horizontal = 15.dp, vertical = 2.dp)
+            .pointerInput(category) {
+                detectTapGestures(
+                    onTap = {
+                        onClick()
+                    },
+                    onLongPress = {
+                        if (category.id != Category.CATEGORY_ALL_ID) {
+                            isCategoryMenuVisible = true
+                        }
+                    }
+                )
+            }
+    ) {
+        Text(text = category.title)
+
+        DropdownMenu(
+            expanded = isCategoryMenuVisible,
+            onDismissRequest = {
+                isCategoryMenuVisible = false
+            },
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = if (category.isPinned) "Unpin" else "Pin") },
+                onClick = {
+                    isCategoryMenuVisible = false
+                    onPin()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = "Delete") },
+                onClick = {
+                    isCategoryMenuVisible = false
+                    onDelete()
+                }
+            )
         }
     }
 }
