@@ -4,12 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.planner.ui.nav.InitNavigation
+import com.planner.ui.nav.PlannerNavigation
 import com.planner.ui.theme.PlannerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,12 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PlannerTheme {
-                Surface(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 40.dp)
-                ) {
-                    InitNavigation()
-                }
+                PlannerNavigation()
             }
         }
     }

@@ -10,7 +10,7 @@ import com.planner.ui.home.HomeScreen
 import com.planner.ui.home.HomeViewModel
 
 @Composable
-fun InitNavigation() {
+fun PlannerNavigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -21,7 +21,8 @@ fun InitNavigation() {
             val state by viewModel.state
             HomeScreen(
                 state = state,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                eventFlow = viewModel.eventFlow
             )
         }
     }

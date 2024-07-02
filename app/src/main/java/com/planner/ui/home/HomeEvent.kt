@@ -20,6 +20,7 @@ sealed class HomeEvent {
         ) : TaskEvent()
         data class Delete(val task: Task): TaskEvent()
         data class Complete(val task: Task): TaskEvent()
+        data object Restore: TaskEvent()
     }
 
 }

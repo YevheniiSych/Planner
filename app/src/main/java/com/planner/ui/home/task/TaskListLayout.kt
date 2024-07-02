@@ -74,7 +74,8 @@ private fun TaskItem(
         return@rememberSwipeToDismissBoxState true
     },
         // positional threshold of 25%
-        positionalThreshold = { it * .75f })
+        positionalThreshold = { it * .75f }
+    )
     SwipeToDismissBox(state = dismissState, modifier = modifier, backgroundContent = {
         DismissTaskBackground(
             dismissState = dismissState, cornerRadius = cornerRadius

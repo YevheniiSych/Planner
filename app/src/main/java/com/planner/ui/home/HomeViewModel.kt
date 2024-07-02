@@ -11,6 +11,8 @@ import com.planner.data.use_case.task.TaskUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -26,7 +28,12 @@ class HomeViewModel @Inject constructor(
     private val _state = mutableStateOf(HomeState())
     val state: State<HomeState> = _state
 
+    private val _eventFlow = MutableSharedFlow<HomeUIEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private var getCategoriesJob: Job? = null
+
+    private var recentlyDeletedTask: Task? = null
 
     init {
         getCategories()
@@ -67,6 +74,15 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.TaskEvent.Delete -> {
                 viewModelScope.launch {
                     taskUseCases.deleteTaskUseCase(event.task)
+                    recentlyDeletedTask = event.task
+                    _eventFlow.emit(HomeUIEvent.OnTaskDeleted)
+                }
+            }
+
+            HomeEvent.TaskEvent.Restore -> {
+                viewModelScope.launch {
+                    taskUseCases.addTaskUseCase(recentlyDeletedTask ?: return@launch)
+                    recentlyDeletedTask = null
                 }
             }
         }

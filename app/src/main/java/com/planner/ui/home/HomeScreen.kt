@@ -12,9 +12,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,15 +36,17 @@ import com.planner.ui.home.category.CategoriesLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
 import com.planner.ui.home.task.TaskLayoutCallbacks
 import com.planner.ui.home.task.TaskListLayout
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
     state: HomeState,
-    onEvent: (HomeEvent) -> Unit
+    onEvent: (HomeEvent) -> Unit,
+    eventFlow: Flow<HomeUIEvent>
 ) {
-//    var showTestingToast by remember {
-//        mutableStateOf(false)
-//    }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
 
     var isAddNewCategoryDialogVisible by rememberSaveable {
@@ -74,83 +83,111 @@ fun HomeScreen(
         )
     }
 
-//    if (showTestingToast) {
-//        Toast.makeText(LocalContext.current, state.selectedCategory.title, Toast.LENGTH_SHORT)
-//            .show()
-//        showTestingToast = false
-//    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val addCategoryIconSize = 30.dp
-
-            CategoryListLayout(
-                modifier = Modifier
-                    .weight(1f),
-                categories = state.categories,
-                selectedCategoryIndex = state.selectedCategoryIndex,
-                callbacks = object : CategoriesLayoutCallbacks {
-                    override fun onCategorySelected(index: Int) {
-                        onEvent(HomeEvent.CategoryEvent.Selected(index))
-//                        showTestingToast = true
-                    }
-
-                    override fun onMenuOpened(category: Category) {
-                        onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
-                    }
-
-                    override fun onPinItemClick(isPinned: Boolean) {
-                        onEvent(HomeEvent.CategoryEvent.Pin(isPinned))
-                    }
-
-                    override fun onDeleteItemClick() {
-                        isDeleteCategoryDialogVisible = true
+    LaunchedEffect(key1 = true) {
+        eventFlow.collectLatest { event ->
+            when (event) {
+                HomeUIEvent.OnTaskDeleted -> {
+                    snackbarHostState.showDeleteTaskSnackbar {
+                        onEvent(HomeEvent.TaskEvent.Restore)
                     }
                 }
-            )
-            Icon(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .size(addCategoryIconSize)
-                    .clickable { isAddNewCategoryDialogVisible = true },
-                imageVector = Icons.Outlined.AddCircle,
-                contentDescription = "Add category icon",
-                tint = Color.Blue
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            TaskListLayout(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxSize(),
-                tasks = state.tasks,
-                callbacks = object : TaskLayoutCallbacks {
-                    override fun onDelete(task: Task) {
-                        onEvent(HomeEvent.TaskEvent.Delete(task))
-                    }
-
-                    override fun onComplete(task: Task) {
-                        onEvent(HomeEvent.TaskEvent.Complete(task))
-                    }
-
-                }
-            )
-            LargeFloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 30.dp, end = 30.dp),
-                onClick = {
-                    onEvent(
-                        HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
-                    )
-                }
-            ) {
-                Icon(imageVector = Icons.Filled.Add, "Add task button")
             }
         }
+    }
+
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 30.dp),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { paddingValues ->
+
+        Column(modifier = Modifier.padding(paddingValues)) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val addCategoryIconSize = 30.dp
+
+                CategoryListLayout(
+                    modifier = Modifier
+                        .weight(1f),
+                    categories = state.categories,
+                    selectedCategoryIndex = state.selectedCategoryIndex,
+                    callbacks = object : CategoriesLayoutCallbacks {
+                        override fun onCategorySelected(index: Int) {
+                            onEvent(HomeEvent.CategoryEvent.Selected(index))
+                        }
+
+                        override fun onMenuOpened(category: Category) {
+                            onEvent(HomeEvent.CategoryEvent.ManageCategory(category))
+                        }
+
+                        override fun onPinItemClick(isPinned: Boolean) {
+                            onEvent(HomeEvent.CategoryEvent.Pin(isPinned))
+                        }
+
+                        override fun onDeleteItemClick() {
+                            isDeleteCategoryDialogVisible = true
+                        }
+                    }
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                        .size(addCategoryIconSize)
+                        .clickable { isAddNewCategoryDialogVisible = true },
+                    imageVector = Icons.Outlined.AddCircle,
+                    contentDescription = "Add category icon",
+                    tint = Color.Blue
+                )
+            }
+            Box(modifier = Modifier.fillMaxSize()) {
+                TaskListLayout(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxSize(),
+                    tasks = state.tasks,
+                    callbacks = object : TaskLayoutCallbacks {
+                        override fun onDelete(task: Task) {
+                            onEvent(HomeEvent.TaskEvent.Delete(task))
+                        }
+
+                        override fun onComplete(task: Task) {
+                            onEvent(HomeEvent.TaskEvent.Complete(task))
+                        }
+
+                    }
+                )
+                LargeFloatingActionButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 30.dp, end = 30.dp),
+                    onClick = {
+                        onEvent(
+                            HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
+                        )
+                    }
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, "Add task button")
+                }
+            }
+
+        }
+
+    }
+}
+
+private suspend fun SnackbarHostState.showDeleteTaskSnackbar(onUndoClick: () -> Unit) {
+    val result = this.showSnackbar(
+        message = "Task has been deleted.",
+        actionLabel = "Undo",
+        duration = SnackbarDuration.Long
+    )
+    when (result) {
+        SnackbarResult.Dismissed -> {}
+        SnackbarResult.ActionPerformed -> onUndoClick()
     }
 }
