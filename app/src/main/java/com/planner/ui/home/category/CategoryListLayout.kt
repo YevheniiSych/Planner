@@ -49,10 +49,6 @@ fun CategoryListLayout(
 
                 val isSelected = selectedCategoryIndex == index
 
-                if (isCategoryMenuVisible) {
-                    callbacks.onMenuOpened(category)
-                }
-
                 Box(
                     modifier = Modifier
                         .clip(shape = CircleShape)
@@ -65,7 +61,7 @@ fun CategoryListLayout(
                             }
                         )
                         .padding(horizontal = 15.dp, vertical = 2.dp)
-                        .pointerInput(true) {
+                        .pointerInput(category) {
                             detectTapGestures(
                                 onTap = {
                                     callbacks.onCategorySelected(index)
@@ -73,6 +69,7 @@ fun CategoryListLayout(
                                 onLongPress = {
                                     if (category.id != Category.CATEGORY_ALL_ID) {
                                         isCategoryMenuVisible = true
+                                        callbacks.onMenuOpened(category)
                                     }
                                 }
                             )

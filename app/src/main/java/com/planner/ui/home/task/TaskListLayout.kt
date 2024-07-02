@@ -22,6 +22,10 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,10 +48,11 @@ fun TaskListLayout(
         modifier = Modifier.then(modifier),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(items = tasks, key = { task -> task.id }) { task ->
+        items(items = tasks, key = { it.id }) { task ->
+            val updatedTask by rememberUpdatedState(newValue = task)
             TaskItem(
                 task = task,
-                onDelete = { callbacks.onDelete(task) },
+                onDelete = { callbacks.onDelete(updatedTask) },
                 onComplete = { callbacks.onComplete(task) }
             )
         }
@@ -68,7 +73,6 @@ private fun TaskItem(
     val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = {
         when (it) {
             SwipeToDismissBoxValue.StartToEnd -> {
-
             }
 
             SwipeToDismissBoxValue.EndToStart -> {
@@ -77,7 +81,7 @@ private fun TaskItem(
 
             SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
         }
-        return@rememberSwipeToDismissBoxState true
+        return@rememberSwipeToDismissBoxState false
     },
         // positional threshold of 25%
         positionalThreshold = { it * .75f }
