@@ -102,9 +102,11 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.CategoryEvent.Delete -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     categoryUseCases.deleteCategory(event.category)
-                    _state.value = state.value.copy(
-                        selectedCategory = Category.CATEGORY_ALL
-                    )
+                    if (event.category.id == state.value.selectedCategory.id) {
+                        _state.value = state.value.copy(
+                            selectedCategory = Category.CATEGORY_ALL
+                        )
+                    }
                 }
             }
 
