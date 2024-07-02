@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -37,15 +37,18 @@ import com.planner.ui.theme.LightYellow
 @Composable
 fun TaskListLayout(
     modifier: Modifier = Modifier,
-    tasks: List<Task> = listOf(), callbacks: TaskLayoutCallbacks
+    tasks: List<Task> = listOf(),
+    callbacks: TaskLayoutCallbacks
 ) {
     LazyColumn(
         modifier = Modifier.then(modifier),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        itemsIndexed(items = tasks, key = { _, task -> task.id }) { _, task ->
+        items(items = tasks, key = { task -> task.id }) { task ->
             TaskItem(
-                task = task, callbacks = callbacks
+                task = task,
+                onDelete = { callbacks.onDelete(task) },
+                onComplete = { callbacks.onComplete(task) }
             )
         }
     }
@@ -55,7 +58,10 @@ fun TaskListLayout(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TaskItem(
-    modifier: Modifier = Modifier, task: Task, callbacks: TaskLayoutCallbacks
+    modifier: Modifier = Modifier,
+    task: Task,
+    onComplete: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val cornerRadius = 10.dp
 
@@ -66,7 +72,7 @@ private fun TaskItem(
             }
 
             SwipeToDismissBoxValue.EndToStart -> {
-                callbacks.onDelete(task)
+                onDelete()
             }
 
             SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
@@ -76,15 +82,23 @@ private fun TaskItem(
         // positional threshold of 25%
         positionalThreshold = { it * .75f }
     )
-    SwipeToDismissBox(state = dismissState, modifier = modifier, backgroundContent = {
-        DismissTaskBackground(
-            dismissState = dismissState, cornerRadius = cornerRadius
-        )
-    }, content = {
-        TaskItemContent(task = task,
-            cornerRadius = cornerRadius,
-            onComplete = { callbacks.onComplete(task) })
-    })
+    SwipeToDismissBox(
+        state = dismissState,
+        modifier = modifier,
+        backgroundContent = {
+            DismissTaskBackground(
+                dismissState = dismissState, cornerRadius = cornerRadius
+            )
+        },
+        content = {
+            TaskItemContent(
+                task = task,
+                cornerRadius = cornerRadius,
+                onComplete = onComplete
+            )
+        }
+    )
+
 }
 
 @Composable
