@@ -1,4 +1,4 @@
-package com.planner.ui.home.task
+package com.planner.ui.home.components.task
 
 import com.planner.data.room.task.Task
 

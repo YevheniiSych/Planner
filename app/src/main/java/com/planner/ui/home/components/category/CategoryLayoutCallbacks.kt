@@ -1,4 +1,4 @@
-package com.planner.ui.home.category
+package com.planner.ui.home.components.category
 
 import com.planner.data.room.category.Category
 

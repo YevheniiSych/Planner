@@ -1,4 +1,4 @@
-package com.planner.ui.home.task
+package com.planner.ui.home.components.task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
