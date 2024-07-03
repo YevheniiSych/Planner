@@ -12,12 +12,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +39,8 @@ fun AddEditCategoryDialog(
     onSaveButtonClick: (categoryName: String) -> Unit = {},
     text: String = ""
 ) {
+
+    val focusRequester = remember { FocusRequester() }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -65,11 +71,11 @@ fun AddEditCategoryDialog(
 
             TextField(
                 value = categoryName,
-                    onValueChange = {
-                        if (maxChar >= it.length) {
-                            categoryName = it
-                        }
-                    },
+                onValueChange = {
+                    if (maxChar >= it.length) {
+                        categoryName = it
+                    }
+                },
                 singleLine = true,
                 textStyle = TextStyle(
                     color = Color.Black
@@ -85,7 +91,13 @@ fun AddEditCategoryDialog(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp),
+                    .padding(top = 10.dp)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged {
+                        if (it.isFocused) {
+
+                        }
+                    },
                 shape = RoundedCornerShape(10.dp)
             )
 
@@ -107,5 +119,9 @@ fun AddEditCategoryDialog(
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
