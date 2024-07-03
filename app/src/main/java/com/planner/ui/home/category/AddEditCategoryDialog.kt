@@ -30,9 +30,10 @@ import com.planner.ui.theme.Blue10
 
 @Preview
 @Composable
-fun AddCategoryDialog(
+fun AddEditCategoryDialog(
     onDismiss: () -> Unit = {},
-    onSaveButtonClick: (categoryName: String) -> Unit = {}
+    onSaveButtonClick: (categoryName: String) -> Unit = {},
+    text: String = ""
 ) {
 
     Dialog(
@@ -43,7 +44,7 @@ fun AddCategoryDialog(
         )
     ) {
         var categoryName by remember {
-            mutableStateOf("")
+            mutableStateOf(text)
         }
 
         Column(

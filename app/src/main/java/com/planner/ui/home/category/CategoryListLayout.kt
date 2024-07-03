@@ -76,6 +76,12 @@ fun CategoryListLayout(
                     onPin = {
                         callbacks.onPinCategory(category)
                     },
+                    onEditTitle = {
+                        callbacks.onEditTitle(
+                            newTitle = it,
+                            category = category
+                        )
+                    },
                     onClick = {
                         callbacks.onCategorySelected(category)
                     }
@@ -92,12 +98,27 @@ private fun CategoryItem(
     isSelected: Boolean,
     onDelete: () -> Unit,
     onPin: () -> Unit,
+    onEditTitle: (title: String) -> Unit,
     onClick: () -> Unit
 ) {
     var isCategoryMenuVisible by rememberSaveable {
         mutableStateOf(false)
     }
 
+    var isAddEditCategoryDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (isAddEditCategoryDialogVisible) {
+        AddEditCategoryDialog(
+            text = category.title,
+            onDismiss = { isAddEditCategoryDialogVisible = false },
+            onSaveButtonClick = {
+                onEditTitle(it)
+                isAddEditCategoryDialogVisible = false
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -137,6 +158,13 @@ private fun CategoryItem(
                 onClick = {
                     isCategoryMenuVisible = false
                     onPin()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = "Edit") },
+                onClick = {
+                    isCategoryMenuVisible = false
+                    isAddEditCategoryDialogVisible = true
                 }
             )
             DropdownMenuItem(

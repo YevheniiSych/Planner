@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
 import com.planner.data.room.task.Task
-import com.planner.ui.home.category.AddCategoryDialog
+import com.planner.ui.home.category.AddEditCategoryDialog
 import com.planner.ui.home.category.CategoryLayoutCallbacks
 import com.planner.ui.home.category.CategoryListLayout
 import com.planner.ui.home.task.TaskLayoutCallbacks
@@ -53,7 +53,7 @@ fun HomeScreen(
     }
 
     if (isAddNewCategoryDialogVisible) {
-        AddCategoryDialog(
+        AddEditCategoryDialog(
             onDismiss = {
                 isAddNewCategoryDialogVisible = false
             },
@@ -108,6 +108,10 @@ fun HomeScreen(
 
                         override fun onDeleteCategory(category: Category) {
                             onEvent(HomeEvent.CategoryEvent.Delete(category))
+                        }
+
+                        override fun onEditTitle(newTitle: String, category: Category) {
+                            onEvent(HomeEvent.CategoryEvent.EditTitle(newTitle, category))
                         }
                     }
                 )

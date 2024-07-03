@@ -6,4 +6,5 @@ interface CategoryLayoutCallbacks {
     fun onCategorySelected(category: Category)
     fun onPinCategory(category: Category)
     fun onDeleteCategory(category: Category)
+    fun onEditTitle(newTitle: String, category: Category)
 }

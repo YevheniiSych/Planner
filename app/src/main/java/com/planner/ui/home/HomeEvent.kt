@@ -9,6 +9,7 @@ sealed class HomeEvent {
         data class Delete(val category: Category) : CategoryEvent()
         data class AddNew(val categoryName: String): CategoryEvent()
         data class Selected(val category: Category): CategoryEvent()
+        data class EditTitle(val newTitle: String, val category: Category) : CategoryEvent()
     }
 
     sealed class TaskEvent: HomeEvent() {

@@ -128,6 +128,16 @@ class HomeViewModel @Inject constructor(
                     selectedCategory = event.category
                 )
             }
+
+            is HomeEvent.CategoryEvent.EditTitle -> {
+                viewModelScope.launch {
+                    categoryUseCases.updateCategoryUseCase(
+                        event.category.copy(
+                            title = event.newTitle
+                        )
+                    )
+                }
+            }
         }
     }
 
