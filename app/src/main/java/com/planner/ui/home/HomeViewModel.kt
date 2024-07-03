@@ -1,7 +1,5 @@
 package com.planner.ui.home
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.planner.data.room.category.Category
@@ -12,10 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +26,8 @@ class HomeViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(HomeState())
-    val state: State<HomeState> = _state
+    private val _state = MutableStateFlow(HomeState())
+    val state: StateFlow<HomeState> = _state
 
     private val _eventFlow = MutableSharedFlow<HomeUIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -103,9 +104,9 @@ class HomeViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     categoryUseCases.deleteCategory(event.category)
                     if (event.category.id == state.value.selectedCategory.id) {
-                        _state.value = state.value.copy(
-                            selectedCategory = Category.CATEGORY_ALL
-                        )
+                        _state.update {
+                            it.copy(selectedCategory = Category.CATEGORY_ALL)
+                        }
                     }
                 }
             }
@@ -124,9 +125,9 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeEvent.CategoryEvent.Selected -> {
-                _state.value = state.value.copy(
-                    selectedCategory = event.category
-                )
+                _state.update {
+                    it.copy(selectedCategory = event.category)
+                }
             }
 
             is HomeEvent.CategoryEvent.EditTitle -> {
@@ -147,19 +148,19 @@ class HomeViewModel @Inject constructor(
             .map {
                 listOf(Category.CATEGORY_ALL) + it
             }
-            .onEach {
-                _state.value = state.value.copy(
-                    categories = it
-                )
+            .onEach { categories ->
+                _state.update {
+                    it.copy(categories = categories)
+                }
             }
             .launchIn(viewModelScope)
     }
 
     private fun getTasks() {
         taskUseCases.getTasksUseCase.getAllTasks().onEach { tasks ->
-            _state.value = state.value.copy(
-                tasks = tasks
-            )
+            _state.update {
+                it.copy(tasks = tasks)
+            }
         }.launchIn(viewModelScope)
     }
 

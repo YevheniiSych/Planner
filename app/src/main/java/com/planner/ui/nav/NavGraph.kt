@@ -1,6 +1,7 @@
 package com.planner.ui.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -18,7 +19,7 @@ fun PlannerNavigation() {
     ) {
         composable(route = Screen.HomeScreen.route) {
             val viewModel = hiltViewModel<HomeViewModel>()
-            val state by viewModel.state
+            val state by viewModel.state.collectAsState()
             HomeScreen(
                 state = state,
                 onEvent = viewModel::onEvent,
