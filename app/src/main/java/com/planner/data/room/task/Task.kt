@@ -35,6 +35,10 @@ data class Task(
     val reminderTime: Long? = null,
     @ColumnInfo(name = "categoryId")
     val categoryId: Int? = null
-)
+) {
+    companion object {
+        val EMPTY = Task()
+    }
+}
 
 class InvalidTaskException(message: String): Exception(message)
