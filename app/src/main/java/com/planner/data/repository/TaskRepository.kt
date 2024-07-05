@@ -2,6 +2,7 @@ package com.planner.data.repository
 
 import com.planner.data.room.task.Task
 import com.planner.data.room.task.TaskDao
+import com.planner.data.room.task.TaskId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -19,6 +20,8 @@ interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
 
     fun getTasksByCategory(categoryId: Int): Flow<List<Task>>
+
+    fun getTask(taskId: TaskId): Flow<Task>
 }
 
 class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
@@ -40,6 +43,10 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
 
     override fun getTasksByCategory(categoryId: Int): Flow<List<Task>> {
         return taskDao.getTasksByCategory(categoryId)
+    }
+
+    override fun getTask(taskId: TaskId): Flow<Task> {
+        return taskDao.getTask(taskId)
     }
 
 }

@@ -14,6 +14,7 @@ import com.planner.data.use_case.category.GetCategoriesUseCase
 import com.planner.data.use_case.category.UpdateCategoryUseCase
 import com.planner.data.use_case.task.AddTaskUseCase
 import com.planner.data.use_case.task.DeleteTaskUseCase
+import com.planner.data.use_case.task.GetSingleTaskUseCase
 import com.planner.data.use_case.task.GetTasksUseCase
 import com.planner.data.use_case.task.TaskUseCases
 import com.planner.data.use_case.task.UpdateTaskUseCase
@@ -65,7 +66,8 @@ object AppModule {
             addTaskUseCase = AddTaskUseCase(repository),
             deleteTaskUseCase = DeleteTaskUseCase(repository),
             updateTaskUseCase = UpdateTaskUseCase(repository),
-            getTasksUseCase = GetTasksUseCase(repository)
+            getTasksUseCase = GetTasksUseCase(repository),
+            getSingleTaskUseCase = GetSingleTaskUseCase(repository)
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.planner.data.room.category.Category
+import com.planner.data.room.task.Task
 import com.planner.data.room.task.TaskId
 import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.task.TaskUseCases
@@ -21,19 +22,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val categoryUseCases: CategoryUseCases,
     private val taskUseCases: TaskUseCases,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow(TaskDetailState())
     val stateFlow: StateFlow<TaskDetailState> = _stateFlow
 
     private var getCategoriesJob: Job? = null
-
-    private val taskId: TaskId = savedStateHandle.toRoute<TaskDetailNav>().taskId
+    private var getTaskJob: Job? = null
 
     init {
+        val taskId: TaskId = savedStateHandle.toRoute<TaskDetailNav>().taskId
+        if (taskId != Task.INVALID_TASK_ID) {
+            getTask(taskId)
+        }
         getCategories()
     }
 
@@ -61,5 +65,17 @@ class TaskDetailViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun getTask(taskId: TaskId) {
+        getTaskJob?.cancel()
+        getTaskJob = taskUseCases.getSingleTaskUseCase(taskId)
+            .onEach { task ->
+                _stateFlow.update {
+                    it.copy(
+                        task = task
+                    )
+                }
+            }.launchIn(viewModelScope)
     }
 }
