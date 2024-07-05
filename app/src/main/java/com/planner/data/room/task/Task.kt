@@ -6,6 +6,8 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.planner.data.room.category.Category
 
+typealias TaskId = Int
+
 @Entity(
     tableName = "Task",
     foreignKeys = [
@@ -37,6 +39,7 @@ data class Task(
     val categoryId: Int? = null
 ) {
     companion object {
+        const val INVALID_TASK_ID: TaskId = -1
         val EMPTY = Task()
     }
 }

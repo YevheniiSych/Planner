@@ -1,6 +1,7 @@
 package com.planner.ui.home.components.task
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +52,8 @@ fun TaskListLayout(
             TaskItem(
                 task = task,
                 onDelete = { callbacks.onDelete(updatedTask) },
-                onComplete = { callbacks.onComplete(task) }
+                onComplete = { callbacks.onComplete(task) },
+                onClick = {callbacks.onTaskClick(task.id)}
             )
         }
     }
@@ -66,7 +66,8 @@ private fun TaskItem(
     modifier: Modifier = Modifier,
     task: Task,
     onComplete: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onClick: () -> Unit
 ) {
     val cornerRadius = 10.dp
 
@@ -98,7 +99,8 @@ private fun TaskItem(
             TaskItemContent(
                 task = task,
                 cornerRadius = cornerRadius,
-                onComplete = onComplete
+                onComplete = onComplete,
+                onClick = onClick
             )
         }
     )
@@ -107,7 +109,10 @@ private fun TaskItem(
 
 @Composable
 private fun TaskItemContent(
-    task: Task, cornerRadius: Dp, onComplete: () -> Unit
+    task: Task,
+    cornerRadius: Dp,
+    onComplete: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -116,16 +121,28 @@ private fun TaskItemContent(
                 color = if (task.isCompleted) LightYellow else LightGray,
                 shape = RoundedCornerShape(cornerRadius)
             )
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(
+                horizontal = 10.dp,
+                vertical = 10.dp
+            )
+            .clickable {
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(checked = task.isCompleted, onCheckedChange = {
             onComplete()
         })
         Text(
-            modifier = Modifier, text = task.text, fontSize = 16.sp, style = TextStyle(
-                textDecoration = if (task.isCompleted) TextDecoration.LineThrough
-                else TextDecoration.None
+            modifier = Modifier,
+            text = task.text,
+            fontSize = 16.sp,
+            style = TextStyle(
+                textDecoration = if (task.isCompleted) {
+                    TextDecoration.LineThrough
+                } else {
+                    TextDecoration.None
+                }
             )
         )
     }

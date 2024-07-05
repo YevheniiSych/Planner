@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.planner.data.room.category.Category
 import com.planner.data.room.task.Task
+import com.planner.data.room.task.TaskId
 import com.planner.ui.home.components.category.AddEditCategoryDialog
 import com.planner.ui.home.components.category.CategoryLayoutCallbacks
 import com.planner.ui.home.components.category.CategoryListLayout
@@ -42,7 +43,9 @@ import kotlinx.coroutines.flow.collectLatest
 fun HomeScreen(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
-    eventFlow: Flow<HomeUIEvent>
+    eventFlow: Flow<HomeUIEvent>,
+    onEditTask: (TaskId) -> Unit,
+    onCreateNewTask: () -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -140,6 +143,10 @@ fun HomeScreen(
                             onEvent(HomeEvent.TaskEvent.Complete(task))
                         }
 
+                        override fun onTaskClick(taskId: TaskId) {
+                            onEditTask(taskId)
+                        }
+
                     }
                 )
                 LargeFloatingActionButton(
@@ -147,9 +154,10 @@ fun HomeScreen(
                         .align(Alignment.BottomEnd)
                         .padding(bottom = 30.dp, end = 30.dp),
                     onClick = {
-                        onEvent(
-                            HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
-                        )
+                        onCreateNewTask()
+//                        onEvent(
+//                            HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
+//                        )
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Add, "Add task button")
