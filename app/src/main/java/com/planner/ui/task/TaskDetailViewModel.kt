@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.planner.data.room.category.Category
 import com.planner.data.room.task.Task
 import com.planner.data.room.task.TaskId
 import com.planner.data.use_case.category.CategoryUseCases
@@ -15,7 +14,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -50,18 +48,21 @@ class TaskDetailViewModel @Inject constructor(
             is TaskDetailEvent.OnReminderSet -> {
 
             }
+
+            is TaskDetailEvent.OnCategorySelected -> {
+
+            }
         }
     }
 
     private fun getCategories() {
         getCategoriesJob?.cancel()
         getCategoriesJob = categoryUseCases.getCategories()
-            .map {
-                listOf(Category.CATEGORY_ALL) + it
-            }
             .onEach { categories ->
                 _stateFlow.update {
-                    it.copy(categories = categories)
+                    it.copy(
+                        categoryMenuItems = categories
+                    )
                 }
             }
             .launchIn(viewModelScope)
@@ -73,7 +74,10 @@ class TaskDetailViewModel @Inject constructor(
             .onEach { task ->
                 _stateFlow.update {
                     it.copy(
-                        task = task
+                        task = task,
+                        selectedCategory = stateFlow.value.categoryMenuItems.firstOrNull { category ->
+                            category.id == task.categoryId
+                        }
                     )
                 }
             }.launchIn(viewModelScope)
