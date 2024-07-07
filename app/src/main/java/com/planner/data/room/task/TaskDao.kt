@@ -28,13 +28,4 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE :taskId = task.id")
     fun getTask(taskId: TaskId): Flow<Task>
-
-    @Transaction
-    @Query(
-        "SELECT category.* " +
-                "FROM task " +
-                "LEFT JOIN category ON task.category_id IS NOT NULL AND task.category_id = category.id " +
-                "WHERE task.id = :taskId AND task.category_id IS NOT NULL"
-    )
-    fun getCategoryByTask(taskId: TaskId): Flow<Category?>
 }

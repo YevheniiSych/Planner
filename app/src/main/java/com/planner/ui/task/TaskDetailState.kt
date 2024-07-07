@@ -5,6 +5,5 @@ import com.planner.data.room.task.Task
 
 data class TaskDetailState(
     val categoryMenuItems: List<Category> = emptyList(),
-    val task: Task = Task.EMPTY,
-    val selectedCategory: Category? = null
+    val task: Task = Task.EMPTY
 )

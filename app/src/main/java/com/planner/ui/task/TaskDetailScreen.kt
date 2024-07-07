@@ -24,7 +24,7 @@ fun TaskDetailScreen(
         onExpandedChange = {
             isCategoryMenuExpanded = it
         },
-        selectedCategory = state.selectedCategory,
+        selectedCategory = state.task.category,
         categories = state.categoryMenuItems,
         onItemClick = {
 
