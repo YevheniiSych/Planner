@@ -13,10 +13,7 @@ import com.planner.data.room.task.TaskDao
         Category::class,
         Task::class
     ],
-    version = 2,
-    autoMigrations = [
-        AutoMigration(from = 1, to = 2)
-    ]
+    version = 1,
 )
 abstract class PlannerDatabase: RoomDatabase() {
 

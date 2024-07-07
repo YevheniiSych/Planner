@@ -56,7 +56,11 @@ class HomeViewModel @Inject constructor(
                         Task(
                             text = event.text,
                             createdAt = System.currentTimeMillis(),
-                            categoryId = event.categoryId,
+                            category = event.categoryId?.let {
+                                Category(
+                                    id = it
+                                )
+                            },
                             reminderTime = event.reminderTime,
                             isReminderEnabled = event.reminderTime != null
                         )

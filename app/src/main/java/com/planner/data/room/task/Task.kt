@@ -1,6 +1,7 @@
 package com.planner.data.room.task
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -10,14 +11,6 @@ typealias TaskId = Int
 
 @Entity(
     tableName = "Task",
-    foreignKeys = [
-        ForeignKey(
-            entity = Category::class,
-            parentColumns = ["id"],
-            childColumns = ["categoryId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
 )
 data class Task(
     @PrimaryKey(autoGenerate = true)
@@ -25,18 +18,18 @@ data class Task(
     val id: Int = 0,
     @ColumnInfo(name = "text", defaultValue = "")
     val text: String = "",
-    @ColumnInfo(name = "createdAt", defaultValue = "0")
+    @ColumnInfo(name = "created_at", defaultValue = "0")
     val createdAt: Long = 0,
-    @ColumnInfo(name = "isCompleted", defaultValue = "false")
+    @ColumnInfo(name = "is_completed", defaultValue = "false")
     val isCompleted: Boolean = false,
-    @ColumnInfo(name = "completedAt", defaultValue = "false")
+    @ColumnInfo(name = "completed_At", defaultValue = "false")
     val completedAt: Long = 0,
-    @ColumnInfo(name = "isReminderEnabled", defaultValue = "false")
+    @ColumnInfo(name = "is_reminder_enabled", defaultValue = "false")
     val isReminderEnabled: Boolean = false,
-    @ColumnInfo(name = "reminderTime", defaultValue = "null")
+    @ColumnInfo(name = "reminder_time", defaultValue = "null")
     val reminderTime: Long? = null,
-    @ColumnInfo(name = "categoryId", index = true)
-    val categoryId: Int? = null
+    @Embedded(prefix = "category_")
+    val category: Category? = null
 ) {
     companion object {
         const val INVALID_TASK_ID: TaskId = -1

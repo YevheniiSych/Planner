@@ -2,29 +2,144 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0a7514ad7d57ae346df59e3bcd3ea950",
+    "identityHash": "1e3f4ff6916a36618f5d71b3031585c0",
     "entities": [
       {
         "tableName": "Category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `dateCreatedTimestamp` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT 0, `title` TEXT NOT NULL DEFAULT '', `date_created_timestamp` INTEGER NOT NULL DEFAULT 0, `is_pinned` INTEGER NOT NULL DEFAULT false, `last_pin_time` INTEGER NOT NULL DEFAULT 0)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "title",
             "columnName": "title",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "dateCreatedTimestamp",
-            "columnName": "dateCreatedTimestamp",
+            "columnName": "date_created_timestamp",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "isPinned",
+            "columnName": "is_pinned",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "lastPinTime",
+            "columnName": "last_pin_time",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Task",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT 0, `text` TEXT NOT NULL DEFAULT '', `created_at` INTEGER NOT NULL DEFAULT 0, `is_completed` INTEGER NOT NULL DEFAULT false, `completed_At` INTEGER NOT NULL DEFAULT false, `is_reminder_enabled` INTEGER NOT NULL DEFAULT false, `reminder_time` INTEGER DEFAULT null, `category_id` INTEGER DEFAULT 0, `category_title` TEXT DEFAULT '', `category_date_created_timestamp` INTEGER DEFAULT 0, `category_is_pinned` INTEGER DEFAULT false, `category_last_pin_time` INTEGER DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "is_completed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completed_At",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "isReminderEnabled",
+            "columnName": "is_reminder_enabled",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "reminderTime",
+            "columnName": "reminder_time",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "null"
+          },
+          {
+            "fieldPath": "category.id",
+            "columnName": "category_id",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "category.title",
+            "columnName": "category_title",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "category.dateCreatedTimestamp",
+            "columnName": "category_date_created_timestamp",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "category.isPinned",
+            "columnName": "category_is_pinned",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "category.lastPinTime",
+            "columnName": "category_last_pin_time",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -40,7 +155,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a7514ad7d57ae346df59e3bcd3ea950')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1e3f4ff6916a36618f5d71b3031585c0')"
     ]
   }
 }

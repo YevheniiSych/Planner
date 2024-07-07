@@ -23,7 +23,7 @@ interface TaskDao {
     @Query("SELECT * FROM task")
     fun getTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM task WHERE :categoryId = categoryId")
+    @Query("SELECT * FROM task WHERE :categoryId = category_id")
     fun getTasksByCategory(categoryId: Int): Flow<List<Task>>
 
     @Query("SELECT * FROM task WHERE :taskId = task.id")
@@ -33,8 +33,8 @@ interface TaskDao {
     @Query(
         "SELECT category.* " +
                 "FROM task " +
-                "LEFT JOIN category ON task.categoryId IS NOT NULL AND task.categoryId = category.id " +
-                "WHERE task.id = :taskId AND task.categoryId IS NOT NULL"
+                "LEFT JOIN category ON task.category_id IS NOT NULL AND task.category_id = category.id " +
+                "WHERE task.id = :taskId AND task.category_id IS NOT NULL"
     )
     fun getCategoryByTask(taskId: TaskId): Flow<Category?>
 }

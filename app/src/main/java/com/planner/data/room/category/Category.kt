@@ -11,11 +11,11 @@ data class Category(
     val id: Int = 0,
     @ColumnInfo( name ="title", defaultValue = "")
     val title: String = "",
-    @ColumnInfo( name ="dateCreatedTimestamp", defaultValue = "0")
+    @ColumnInfo( name ="date_created_timestamp", defaultValue = "0")
     val dateCreatedTimestamp: Long = System.currentTimeMillis(),
-    @ColumnInfo(name = "isPinned", defaultValue = "false")
+    @ColumnInfo(name = "is_pinned", defaultValue = "false")
     val isPinned: Boolean = false,
-    @ColumnInfo(name = "lastPinTime", defaultValue = "0")
+    @ColumnInfo(name = "last_pin_time", defaultValue = "0")
     val lastPinTime: Long = 0
 ) {
     companion object {
