@@ -2,29 +2,32 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "f61dfb0037bcf17c54f8a499cba3afda",
+    "identityHash": "5bc49bec1d22904d669ed8e49c66e6c9",
     "entities": [
       {
         "tableName": "Category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `dateCreatedTimestamp` INTEGER NOT NULL, `isPinned` INTEGER NOT NULL DEFAULT false, `lastPinTime` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT 0, `title` TEXT NOT NULL DEFAULT '', `dateCreatedTimestamp` INTEGER NOT NULL DEFAULT 0, `isPinned` INTEGER NOT NULL DEFAULT false, `lastPinTime` INTEGER NOT NULL DEFAULT 0)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "title",
             "columnName": "title",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "dateCreatedTimestamp",
             "columnName": "dateCreatedTimestamp",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "isPinned",
@@ -145,7 +148,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f61dfb0037bcf17c54f8a499cba3afda')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5bc49bec1d22904d669ed8e49c66e6c9')"
     ]
   }
 }

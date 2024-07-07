@@ -7,8 +7,11 @@ import androidx.room.PrimaryKey
 @Entity
 data class Category(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo( name ="id", defaultValue = "0")
     val id: Int = 0,
+    @ColumnInfo( name ="title", defaultValue = "")
     val title: String = "",
+    @ColumnInfo( name ="dateCreatedTimestamp", defaultValue = "0")
     val dateCreatedTimestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "isPinned", defaultValue = "false")
     val isPinned: Boolean = false,
