@@ -27,10 +27,10 @@ fun TaskDetailScreen(
         selectedCategory = state.task.category,
         categories = state.categoryMenuItems,
         onItemClick = {
-
+            onEvent(TaskDetailEvent.OnCategorySelected(it))
         },
         onNoCategoryClick = {
-
+            onEvent(TaskDetailEvent.OnNoCategorySelected)
         }
     )
 }

@@ -14,8 +14,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.planner.R
 import com.planner.data.room.category.Category
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +44,7 @@ fun SelectCategoryDropdownMenu(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(0.5f),
-                value = selectedCategory?.title ?: "No Category No Category",
+                value = selectedCategory?.title ?: stringResource(R.string.no_category_title),
                 onValueChange = {},
                 readOnly = true,
                 singleLine = true,
