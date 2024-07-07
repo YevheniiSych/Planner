@@ -30,6 +30,8 @@ fun TaskDetailScreen(
     ) {
 
         SelectCategoryDropdownMenu(
+            modifier = Modifier
+                .fillMaxWidth(0.35f),
             expanded = isCategoryMenuExpanded,
             onExpandedChange = {
                 isCategoryMenuExpanded = it
