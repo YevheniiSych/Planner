@@ -70,14 +70,12 @@ class TaskDetailViewModel @Inject constructor(
 
     private fun getTask(taskId: TaskId) {
         getTaskJob?.cancel()
-        getTaskJob = taskUseCases.getSingleTaskUseCase(taskId)
-            .onEach { task ->
+        getTaskJob = taskUseCases.getTaskWithCategoryUseCase(taskId)
+            .onEach { taskWithCategory ->
                 _stateFlow.update {
                     it.copy(
-                        task = task,
-                        selectedCategory = stateFlow.value.categoryMenuItems.firstOrNull { category ->
-                            category.id == task.categoryId
-                        }
+                        task = taskWithCategory.task,
+                        selectedCategory = taskWithCategory.category
                     )
                 }
             }.launchIn(viewModelScope)

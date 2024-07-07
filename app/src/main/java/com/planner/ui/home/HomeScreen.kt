@@ -154,10 +154,10 @@ fun HomeScreen(
                         .align(Alignment.BottomEnd)
                         .padding(bottom = 30.dp, end = 30.dp),
                     onClick = {
-                        onCreateNewTask()
-//                        onEvent(
-//                            HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
-//                        )
+//                        onCreateNewTask()
+                        onEvent(
+                            HomeEvent.TaskEvent.AddNew("New task ${state.tasks.size + 1}")
+                        )
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Add, "Add task button")

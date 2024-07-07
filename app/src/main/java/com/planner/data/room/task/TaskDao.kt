@@ -3,8 +3,10 @@ package com.planner.data.room.task
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
+import com.planner.data.room.category.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,4 +28,13 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE :taskId = task.id")
     fun getTask(taskId: TaskId): Flow<Task>
+
+    @Transaction
+    @Query(
+        "SELECT category.* " +
+                "FROM task " +
+                "LEFT JOIN category ON task.categoryId IS NOT NULL AND task.categoryId = category.id " +
+                "WHERE task.id = :taskId AND task.categoryId IS NOT NULL"
+    )
+    fun getCategoryByTask(taskId: TaskId): Flow<Category?>
 }

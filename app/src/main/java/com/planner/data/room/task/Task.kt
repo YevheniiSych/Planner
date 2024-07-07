@@ -35,7 +35,7 @@ data class Task(
     val isReminderEnabled: Boolean = false,
     @ColumnInfo(name = "reminderTime", defaultValue = "null")
     val reminderTime: Long? = null,
-    @ColumnInfo(name = "categoryId")
+    @ColumnInfo(name = "categoryId", index = true)
     val categoryId: Int? = null
 ) {
     companion object {

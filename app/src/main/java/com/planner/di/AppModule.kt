@@ -14,7 +14,7 @@ import com.planner.data.use_case.category.GetCategoriesUseCase
 import com.planner.data.use_case.category.UpdateCategoryUseCase
 import com.planner.data.use_case.task.AddTaskUseCase
 import com.planner.data.use_case.task.DeleteTaskUseCase
-import com.planner.data.use_case.task.GetSingleTaskUseCase
+import com.planner.data.use_case.task.GetTaskWithCategoryUseCase
 import com.planner.data.use_case.task.GetTasksUseCase
 import com.planner.data.use_case.task.TaskUseCases
 import com.planner.data.use_case.task.UpdateTaskUseCase
@@ -32,6 +32,7 @@ object AppModule {
     @Singleton
     fun providePlannerDatabase(app: Application): PlannerDatabase {
         return  Room.databaseBuilder(app, PlannerDatabase::class.java, PlannerDatabase.DATABASE_NAME)
+            .fallbackToDestructiveMigration()
 //            .createFromAsset("database/planner.db")
             .build()
     }
@@ -61,13 +62,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTaskUseCases(repository: TaskRepository): TaskUseCases {
+    fun provideTaskUseCases(
+        taskRepository: TaskRepository,
+        categoryRepository: CategoryRepository
+    ): TaskUseCases {
         return TaskUseCases(
-            addTaskUseCase = AddTaskUseCase(repository),
-            deleteTaskUseCase = DeleteTaskUseCase(repository),
-            updateTaskUseCase = UpdateTaskUseCase(repository),
-            getTasksUseCase = GetTasksUseCase(repository),
-            getSingleTaskUseCase = GetSingleTaskUseCase(repository)
+            addTaskUseCase = AddTaskUseCase(taskRepository),
+            deleteTaskUseCase = DeleteTaskUseCase(taskRepository),
+            updateTaskUseCase = UpdateTaskUseCase(taskRepository),
+            getTasksUseCase = GetTasksUseCase(taskRepository),
+            getTaskWithCategoryUseCase = GetTaskWithCategoryUseCase(
+                taskRepository = taskRepository,
+                categoryRepository = categoryRepository
+            )
         )
     }
 }

@@ -2,6 +2,7 @@ package com.planner.data.repository
 
 import com.planner.data.room.category.Category
 import com.planner.data.room.category.CategoryDao
+import com.planner.data.room.task.TaskId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -18,6 +19,8 @@ interface CategoryRepository {
     fun getCategories(): Flow<List<Category>>
 
    suspend fun updateCategory(category: Category)
+
+    fun getCategoryByTask(taskId: TaskId): Flow<Category?>
 }
 
 private class CategoryRepositoryImpl(
@@ -40,4 +43,7 @@ private class CategoryRepositoryImpl(
         categoryDao.updateCategory(category)
     }
 
+    override fun getCategoryByTask(taskId: TaskId): Flow<Category?> {
+        return categoryDao.getCategoryByTask(taskId)
+    }
 }
