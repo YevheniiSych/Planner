@@ -36,12 +36,12 @@ fun SelectCategoryDropdownMenu(
 ) {
     ExposedDropdownMenuBox(
         modifier = Modifier
+            .then(modifier)
             .background(
                 shape = RoundedCornerShape(30.dp),
                 color = Color.Blue
             )
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-            .then(modifier),
+            .padding(horizontal = 10.dp, vertical = 5.dp),
         expanded = expanded,
         onExpandedChange = onExpandedChange
     ) {
