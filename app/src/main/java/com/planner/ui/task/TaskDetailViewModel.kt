@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.planner.ui.task
 
 import androidx.lifecycle.SavedStateHandle
@@ -11,9 +13,11 @@ import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.task.TaskUseCases
 import com.planner.ui.nav.TaskDetailNav
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -39,16 +43,29 @@ class TaskDetailViewModel @Inject constructor(
             getTask(taskId)
         }
         getCategories()
+        viewModelScope.launch {
+            _stateFlow.debounce(1000)
+                .collect { state ->
+                    saveTaskTitle(state.task.text)
+                }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.launch {
+            saveTaskTitle(stateFlow.value.task.text)
+        }
     }
 
     fun onEvent(event: TaskDetailEvent) {
         when (event) {
             is TaskDetailEvent.OnTitleInput -> {
-                viewModelScope.launch {
-                    taskUseCases.updateTaskUseCase(
-                        stateFlow.value.task.copy(
+                _stateFlow.update {
+                    it.copy(
+                        task = it.task.copy(
                             text = event.text
-                        )
+                        ),
                     )
                 }
             }
@@ -100,5 +117,13 @@ class TaskDetailViewModel @Inject constructor(
                     )
                 }
             }.launchIn(viewModelScope)
+    }
+
+    private suspend fun saveTaskTitle(text: String) {
+        taskUseCases.updateTaskUseCase(
+            stateFlow.value.task.copy(
+                text = text
+            )
+        )
     }
 }

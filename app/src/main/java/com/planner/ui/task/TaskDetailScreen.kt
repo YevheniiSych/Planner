@@ -33,10 +33,6 @@ fun TaskDetailScreen(
         mutableStateOf(false)
     }
 
-    var taskText by rememberSaveable {
-        mutableStateOf("")
-    }
-
     val contentPadding = remember { 20.dp }
 
     Column(
