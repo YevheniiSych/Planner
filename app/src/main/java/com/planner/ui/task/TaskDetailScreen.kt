@@ -78,9 +78,9 @@ fun TaskDetailScreen(
                 .padding(top = 10.dp)
                 .fillMaxWidth()
                 .fillMaxHeight(0.3f),
-            text = taskText,
+            text = state.task.text,
             onValueChange = {
-                taskText = it
+                onEvent(TaskDetailEvent.OnTitleInput(it))
             },
             onFocusChange = {}
         )

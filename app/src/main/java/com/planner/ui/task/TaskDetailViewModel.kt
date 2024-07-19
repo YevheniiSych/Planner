@@ -44,7 +44,13 @@ class TaskDetailViewModel @Inject constructor(
     fun onEvent(event: TaskDetailEvent) {
         when (event) {
             is TaskDetailEvent.OnTitleInput -> {
-
+                viewModelScope.launch {
+                    taskUseCases.updateTaskUseCase(
+                        stateFlow.value.task.copy(
+                            text = event.text
+                        )
+                    )
+                }
             }
 
             is TaskDetailEvent.OnReminderSet -> {
