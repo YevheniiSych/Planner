@@ -2,12 +2,14 @@ package com.planner.ui.nav
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.planner.data.room.task.Task
 import com.planner.data.room.task.TaskId
 import com.planner.ui.task.TaskDetailScreen
+import com.planner.ui.task.TaskDetailState
 import com.planner.ui.task.TaskDetailViewModel
 import kotlinx.serialization.Serializable
 
@@ -19,7 +21,7 @@ data class TaskDetailNav(
 fun NavGraphBuilder.taskDetailScreen(onNavigateBack: () -> Unit) {
     composable<TaskDetailNav> {
         val viewModel = hiltViewModel<TaskDetailViewModel>()
-        val state by viewModel.stateFlow.collectAsState()
+        val state by viewModel.stateLiveData.observeAsState(TaskDetailState())
         TaskDetailScreen(
             state = state,
             onEvent = viewModel::onEvent,

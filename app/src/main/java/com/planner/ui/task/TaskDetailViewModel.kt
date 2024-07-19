@@ -1,5 +1,7 @@
 package com.planner.ui.task
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,12 +13,10 @@ import com.planner.data.use_case.category.CategoryUseCases
 import com.planner.data.use_case.task.TaskUseCases
 import com.planner.ui.nav.TaskDetailNav
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +27,9 @@ class TaskDetailViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
 ) : ViewModel() {
 
-    private val _stateFlow = MutableStateFlow(TaskDetailState())
-    val stateFlow: StateFlow<TaskDetailState> = _stateFlow
+    private val _stateLiveData = MutableLiveData<TaskDetailState>()
+    val stateLiveData: LiveData<TaskDetailState>
+        get() = _stateLiveData
 
     private var getCategoriesJob: Job? = null
     private var getTaskJob: Job? = null
@@ -44,11 +45,11 @@ class TaskDetailViewModel @Inject constructor(
     fun onEvent(event: TaskDetailEvent) {
         when (event) {
             is TaskDetailEvent.OnTitleInput -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     taskUseCases.updateTaskUseCase(
-                        stateFlow.value.task.copy(
+                        stateLiveData.value?.task?.copy(
                             text = event.text
-                        )
+                        ) ?: return@launch
                     )
                 }
             }
@@ -70,9 +71,9 @@ class TaskDetailViewModel @Inject constructor(
     private fun updateTaskCategory(category: Category?) {
         viewModelScope.launch {
             taskUseCases.updateTaskUseCase(
-                stateFlow.value.task.copy(
+                stateLiveData.value?.task?.copy(
                     category = category
-                )
+                ) ?: return@launch
             )
         }
     }
@@ -81,11 +82,9 @@ class TaskDetailViewModel @Inject constructor(
         getCategoriesJob?.cancel()
         getCategoriesJob = categoryUseCases.getCategories()
             .onEach { categories ->
-                _stateFlow.update {
-                    it.copy(
-                        categoryMenuItems = categories
-                    )
-                }
+                _stateLiveData.value = stateLiveData.value?.copy(
+                    categoryMenuItems = categories
+                )
             }
             .launchIn(viewModelScope)
     }
@@ -94,11 +93,9 @@ class TaskDetailViewModel @Inject constructor(
         getTaskJob?.cancel()
         getTaskJob = taskUseCases.getSingleTaskUseCase(taskId)
             .onEach { task ->
-                _stateFlow.update {
-                    it.copy(
-                        task = task
-                    )
-                }
+                _stateLiveData.value = stateLiveData.value?.copy(
+                    task = task
+                )
             }.launchIn(viewModelScope)
     }
 }
