@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -137,6 +138,8 @@ private fun TaskItemContent(
             modifier = Modifier,
             text = task.text,
             fontSize = 16.sp,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
             style = TextStyle(
                 textDecoration = if (task.isCompleted) {
                     TextDecoration.LineThrough
