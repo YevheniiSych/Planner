@@ -46,7 +46,7 @@ class TaskDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _stateFlow.debounce(1000)
                 .collect { state ->
-                    saveTaskTitle(state.task.text)
+                    saveTask(state.task.text)
                 }
         }
     }
@@ -54,7 +54,7 @@ class TaskDetailViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {
-            saveTaskTitle(stateFlow.value.task.text)
+            saveTask(stateFlow.value.task.text)
         }
     }
 
@@ -71,7 +71,7 @@ class TaskDetailViewModel @Inject constructor(
             }
 
             is TaskDetailEvent.OnReminderSet -> {
-
+                updateTaskReminder(event.isEnabled, event.time)
             }
 
             is TaskDetailEvent.OnCategorySelected -> {
@@ -81,6 +81,17 @@ class TaskDetailViewModel @Inject constructor(
             TaskDetailEvent.OnNoCategorySelected -> {
                 updateTaskCategory(null)
             }
+        }
+    }
+
+    private fun updateTaskReminder(isEnabled: Boolean, time: Long?) {
+        viewModelScope.launch {
+            taskUseCases.updateTaskUseCase(
+                stateFlow.value.task.copy(
+                    isReminderEnabled = isEnabled,
+                    reminderTime = time,
+                )
+            )
         }
     }
 
@@ -119,7 +130,7 @@ class TaskDetailViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private suspend fun saveTaskTitle(text: String) {
+    private suspend fun saveTask(text: String) {
         taskUseCases.updateTaskUseCase(
             stateFlow.value.task.copy(
                 text = text

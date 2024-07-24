@@ -88,5 +88,9 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    //Serialization
     implementation(libs.kotlinx.serialization.json)
+
+    //Extended icons
+    implementation(libs.androidx.material.icons.extended)
 }
