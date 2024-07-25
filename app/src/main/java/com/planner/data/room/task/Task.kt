@@ -3,7 +3,6 @@ package com.planner.data.room.task
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.planner.data.room.category.Category
 
@@ -37,4 +36,4 @@ data class Task(
     }
 }
 
-class InvalidTaskException(message: String): Exception(message)
+class InvalidTaskException(message: String) : Exception(message)

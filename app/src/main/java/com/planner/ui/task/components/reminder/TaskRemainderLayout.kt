@@ -14,6 +14,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,25 +25,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
-import kotlin.random.Random
 
 @Composable
 fun TaskReminderLayout(
-    isReminderEnabled: Boolean,
-    reminderTime: String,
-    reminderDate: String,
+    state: ReminderState,
     onReminderSet: (isReminderEnabled: Boolean, reminderTime: Long?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var showTimePicker by rememberSaveable {
+    var showDateTimePicker by rememberSaveable {
         mutableStateOf(false)
     }
 
     Row(
         modifier = modifier
             .clickable {
-                showTimePicker = true
+                showDateTimePicker = true
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -66,15 +64,15 @@ fun TaskReminderLayout(
                 .weight(1f),
             horizontalAlignment = Alignment.End
         ) {
-            if (isReminderEnabled) {
+            if (state.isEnabled) {
                 Text(
-                    text = reminderTime,
+                    text = state.timeString,
                     fontSize = 20.sp,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = reminderDate,
+                    text = state.dateString,
                     fontSize = 10.sp,
                     color = Color.Black
                 )
@@ -84,22 +82,33 @@ fun TaskReminderLayout(
         Spacer(modifier = Modifier.width(20.dp))
 
         Switch(
-            checked = isReminderEnabled,
+            checked = state.isEnabled,
             onCheckedChange = { isChecked ->
-                onReminderSet(isChecked, Random(100).nextLong())
+                if (isChecked) {
+                    showDateTimePicker = true
+                } else {
+                    onReminderSet(false, null)
+                }
             }
         )
     }
 
-    if (showTimePicker) {
+    if (showDateTimePicker) {
         ReminderDateTimePicker(
-            onConfirm = { reminderTime ->
-                showTimePicker = false
+            initialSelectedDateMillis = state.timeMillis ?: System.currentTimeMillis(),
+            initialHour = state.hour,
+            initialMinute = state.minute,
+            onConfirm = {
+                onReminderSet(
+                    true,
+                    it
+                )
+                showDateTimePicker = false
             },
             onDismiss = {
-                showTimePicker = false
+                showDateTimePicker = false
             },
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }
@@ -108,9 +117,7 @@ fun TaskReminderLayout(
 @Composable
 private fun TaskReminderLayoutPreview() {
     TaskReminderLayout(
-        isReminderEnabled = true,
-        reminderTime = "11:04",
-        reminderDate = "21.07.2024",
+        state = ReminderState(),
         onReminderSet = { _, _ -> },
         modifier = Modifier
             .fillMaxWidth()

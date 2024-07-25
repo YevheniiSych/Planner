@@ -5,10 +5,11 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
-object DateUtil {
+object DateTimeUtil {
 
     fun from(millis: Long, format: String): String {
         val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -25,4 +26,9 @@ object DateUtil {
         return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     }
 
+    fun getLocalTimeFromMillis(millis: Long): LocalTime {
+        val instant = Instant.ofEpochMilli(millis)
+        val localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime()
+        return localDateTime.toLocalTime()
+    }
 }

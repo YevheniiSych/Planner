@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,8 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.planner.ui.task.components.SelectCategoryDropdownMenu
-import com.planner.ui.task.components.reminder.TaskReminderLayout
 import com.planner.ui.task.components.TaskTitleInputField
+import com.planner.ui.task.components.reminder.ReminderState
+import com.planner.ui.task.components.reminder.TaskReminderLayout
 
 @Composable
 fun TaskDetailScreen(
@@ -33,6 +35,15 @@ fun TaskDetailScreen(
     var isCategoryMenuExpanded by rememberSaveable {
         mutableStateOf(false)
     }
+
+//    val reminderState by remember {
+//        mutableStateOf(
+//            ReminderState(
+//                timeMillis = state.task.reminderTime,
+//                isEnabled = state.task.isReminderEnabled
+//            )
+//        )
+//    }
 
     val contentPadding = remember { 20.dp }
 
@@ -87,9 +98,7 @@ fun TaskDetailScreen(
         )
 
         TaskReminderLayout(
-            isReminderEnabled = state.task.isReminderEnabled,
-            reminderTime = "11:00",
-            reminderDate = "21.07.2024",
+            state = state.reminderState,
             onReminderSet = { isReminderEnabled, reminderTime ->
                 onEvent(TaskDetailEvent.OnReminderSet(isReminderEnabled, reminderTime))
             },

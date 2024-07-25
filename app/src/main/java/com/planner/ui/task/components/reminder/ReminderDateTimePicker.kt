@@ -44,26 +44,27 @@ import androidx.compose.ui.window.DialogProperties
 import com.planner.extension.isPastTimeSelected
 import com.planner.extension.isTodaySelected
 import com.planner.ui.util.DatePickerSelectableDates
-import com.planner.ui.util.DateUtil
-import java.time.LocalTime
+import com.planner.ui.util.DateTimeUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderDateTimePicker(
+    initialSelectedDateMillis: Long,
+    initialHour: Int,
+    initialMinute: Int,
     onConfirm: (reminderTime: Long) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    reminderTime: Long = System.currentTimeMillis()
 ) {
 
     val timePickerState = rememberTimePickerState(
-        initialHour = LocalTime.now().hour,
-        initialMinute = LocalTime.now().minute + 1,
+        initialHour = initialHour,
+        initialMinute = initialMinute,
         is24Hour = true
     )
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = reminderTime,
+        initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = DatePickerSelectableDates.Future
     )
 
@@ -73,8 +74,8 @@ fun ReminderDateTimePicker(
 
     val selectedDate = remember {
         derivedStateOf {
-            DateUtil.from(
-                datePickerState.selectedDateMillis ?: reminderTime,
+            DateTimeUtil.from(
+                datePickerState.selectedDateMillis ?: System.currentTimeMillis(),
                 "dd.MM.yyyy"
             )
         }
@@ -122,7 +123,7 @@ fun ReminderDateTimePicker(
                     isToday = datePickerState.isTodaySelected(),
                     onConfirm = {
                         onConfirm(
-                            DateUtil.convertToFullDateInMillis(
+                            DateTimeUtil.convertToFullDateInMillis(
                                 hour = timePickerState.hour,
                                 minute = timePickerState.minute,
                                 dateInMillis = datePickerState.selectedDateMillis
@@ -253,6 +254,9 @@ private fun ReminderDatePicker(
 @Composable
 private fun ReminderDateTimePickerPreview() {
     ReminderDateTimePicker(
+        initialSelectedDateMillis = 1721892245191,
+        initialHour = 10,
+        initialMinute = 30,
         onConfirm = {},
         onDismiss = {},
         modifier = Modifier
