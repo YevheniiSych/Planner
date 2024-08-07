@@ -1,5 +1,10 @@
 package com.planner.ui.task.components.reminder
 
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 
@@ -33,9 +40,32 @@ fun TaskReminderLayout(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+
     var showDateTimePicker by rememberSaveable {
         mutableStateOf(false)
     }
+
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            hasNotificationPermission = isGranted
+            showDateTimePicker = isGranted
+        }
+    )
 
     Row(
         modifier = modifier
@@ -94,22 +124,26 @@ fun TaskReminderLayout(
     }
 
     if (showDateTimePicker) {
-        ReminderDateTimePicker(
-            initialSelectedDateMillis = state.timeMillis ?: System.currentTimeMillis(),
-            initialHour = state.hour,
-            initialMinute = state.minute,
-            onConfirm = {
-                onReminderSet(
-                    true,
-                    it
-                )
-                showDateTimePicker = false
-            },
-            onDismiss = {
-                showDateTimePicker = false
-            },
-            modifier = Modifier,
-        )
+        if (hasNotificationPermission) {
+            ReminderDateTimePicker(
+                initialSelectedDateMillis = state.timeMillis ?: System.currentTimeMillis(),
+                initialHour = state.hour,
+                initialMinute = state.minute,
+                onConfirm = {
+                    onReminderSet(
+                        true,
+                        it
+                    )
+                    showDateTimePicker = false
+                },
+                onDismiss = {
+                    showDateTimePicker = false
+                },
+                modifier = Modifier,
+            )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(POST_NOTIFICATIONS)
+        }
     }
 }
 
